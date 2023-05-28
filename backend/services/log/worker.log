@@ -1,0 +1,53 @@
+17:28:16 Worker rq:worker:3beac7abf8994248aed26fc154eb7766 started with PID 271099, version 1.14.1
+17:28:16 Subscribing to channel rq:pubsub:3beac7abf8994248aed26fc154eb7766
+17:28:16 *** Listening on default, low, high...
+17:28:16 Cleaning registries for queue: default
+17:28:16 Cleaning registries for queue: low
+17:28:16 Cleaning registries for queue: high
+17:28:32 default: src.tasks.upload_files(<_io.BytesIO object at 0x7f50c281c360>) (c80c7ef5-686b-41b8-9e1e-043dfbc08be2)
+<sqlalchemy.engine.cursor.CursorResult object at 0x7f8348912860>
+<sqlalchemy.engine.cursor.CursorResult object at 0x7f83489128c0>
+<sqlalchemy.engine.cursor.CursorResult object at 0x7f8348912920>
+dict_keys(['1.xlsx', '2.xlsx', '3.xlsx', '4.1.xlsx', '4.xlsx', '5.xlsx'])
+load data to stg_col_781 -> select id from stg_col_781
+Success (Update: 14 records)
+load data to stg_col_758 -> select id from stg_col_758
+Success (Update: 294 records)
+load data to stg_col_769 -> select id from stg_col_769
+Success (Update: 64 records)
+load data to stg_col_770 -> select id from stg_col_770
+Success (Update: 3 records)
+load data to stg_col_775 -> select id from stg_col_775
+Success (Update: 2 records)
+load data to stg_col_2156 -> select id from stg_col_2156
+Success (Update: 6 records)
+load data to stg_col_2463 -> select id from stg_col_2463
+Success (Update: 6 records)
+load data to stg_col_3163 -> select id from stg_col_3163
+Success (Update: 8 records)
+load data to stg_col_3243 -> select id from stg_col_3243
+Success (Update: 6 records)
+load data to stg_col_103506 -> select id from stg_col_103506
+Success (Update: 5 records)
+load data to stg_building -> select id from stg_building
+Success (Update: 18432 records)
+load data to stg_event_system -> select id from stg_event_system
+Success (Update: 950 records)
+load data to stg_work_type_common -> select id from stg_work_type_common
+Success (Update: 498 records)
+load data to stg_work_type -> select id from stg_work_type
+Success (Update: 29 records)
+load data to stg_work -> select global_id from stg_work
+Success (Update: 1747 records)
+load data to stg_incident -> select date_completed from stg_incident
+Success (Update: 1048555 records)
+<sqlalchemy.engine.cursor.CursorResult object at 0x7f83474a5c00>
+/data/backend/services/upload_data/src/service/sql/model_etl.sql
+<sqlalchemy.engine.cursor.CursorResult object at 0x7f83474a5900>
+Start update model
+Success update model
+17:30:55 default: Job OK (c80c7ef5-686b-41b8-9e1e-043dfbc08be2)
+17:30:55 Result is kept for 500 seconds
+17:44:25 Cleaning registries for queue: default
+17:44:25 Cleaning registries for queue: low
+17:44:25 Cleaning registries for queue: high
