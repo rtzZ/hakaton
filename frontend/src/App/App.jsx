@@ -7,6 +7,7 @@ import Box from "@mui/material/Box"
 
 import router from './router'
 import {store} from "../entities/commonStore";
+import {ErrorBoundary} from "./ErrorBoundary";
 
 const theme = createTheme({
     typography: {

@@ -5,6 +5,7 @@ from src.service.trainer import Learn
 
 
 async def learning_model(fields: list[str], model_name: str, username: str, session: AsyncSession):
+    """ Обучает модель """
     try:
         learn = Learn(filename='test_name', fields=fields)
         data, label = learn.get_data()
@@ -21,12 +22,14 @@ async def learning_model(fields: list[str], model_name: str, username: str, sess
 
 
 async def get_column_names(session: AsyncSession):
+    """ Обучает модель """
     query = text('SELECT * FROM public.for_model;')
     column_names = list((await session.execute(query)).keys())
     column_names.remove('work_type_id')
     return list(column_names)
 
 async def set_model(id: str, session: AsyncSession):
+    """ Устанавливает модель по умлчанию """
     try:
         query = select(LearningModel)
         result = await session.execute(query)

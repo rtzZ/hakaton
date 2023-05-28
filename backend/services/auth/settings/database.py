@@ -5,7 +5,7 @@ from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-'''Подключение к БД'''
+""" Подключение к БД """
 
 DB_USER = os.environ.get('DB_USER')
 DB_PASS = os.environ.get('DB_PASS')
@@ -14,9 +14,11 @@ DB_HOST = os.environ.get('DB_HOST')
 DB_PORT = str(os.environ.get('DB_PORT'))
 DB_SCHEMA = os.environ.get('DB_SCHEMA')
 
+
 class CConnection(Connection):
     def _get_unique_id(self, prefix):
         return f"__asyncpg_{prefix}_{uuid4()}__"
+
 
 connect_args = {'prepared_statement_cache_size': 0,
                 'statement_cache_size': 0,
@@ -28,7 +30,8 @@ database = create_async_engine(DATABASE_URL, poolclass=NullPool, future=True, co
 
 async_session = sessionmaker(bind=database, class_=AsyncSession, expire_on_commit=False, autoflush=False)
 
-'''Асинхронные сессии'''
+""" Асинхронные сессии """
+
 
 async def get_session() -> AsyncSession:
     async with async_session() as session:

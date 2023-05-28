@@ -8,7 +8,8 @@ from src.routers import users
 
 app = FastAPI(redoc_url=None)
 
-'''Настройка CORS'''
+
+""" Настройка CORS """
 
 origins = [
     "http://localhost",
@@ -26,7 +27,7 @@ app.add_middleware(
 
 app.include_router(users)
 
-'''Настройка Swagger'''
+""" Настройка Swagger """
 
 def custom_openapi():
     if app.openapi_schema:

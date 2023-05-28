@@ -10,6 +10,7 @@ from app_utils.models import BaseModel
 
 
 class LearningModel(BaseModel):
+    """ Данные о модели (metamodel) """
 
     __tablename__ = "learning_model"
 

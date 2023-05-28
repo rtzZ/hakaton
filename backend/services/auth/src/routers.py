@@ -8,17 +8,26 @@ from src.utils import create_user, check_user, check_token, check_role, create_t
 
 users = APIRouter()
 
+
+
 @users.post("/sign-up", status_code=201)
 async def sign_up(user: UserCreate, session: AsyncSession = Depends(get_session)):
+    """Регистрация пользователя"""
+
     user = await create_user(user=user, session=session)
     if user:
         return JSONResponse({'user': user.dict()})
     raise HTTPException(status_code=401, detail="This user already exists")
 
+
+
+
 @users.post("/sign-in", status_code=200)
-async def sign_in(app_role: str = None, token: bool = False, basic_auth: HTTPAuthorizationCredentials = Depends(HTTPBasic(auto_error=False)),
+async def sign_in(app_role: str = None, token: bool = False,
+                  basic_auth: HTTPAuthorizationCredentials = Depends(HTTPBasic(auto_error=False)),
                   bearer_auth: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False)),
                   session: AsyncSession = Depends(get_session)):
+    """Авторизация пользователя"""
     access = False
     username = None
     if basic_auth:
@@ -28,12 +37,7 @@ async def sign_in(app_role: str = None, token: bool = False, basic_auth: HTTPAut
     if access:
         access_role = await check_role(username=username, app_role=app_role, session=session)
         if access_role:
-            return JSONResponse(dict(access=True, token=create_token(username), username=username) if token else dict(access=True, username=username))
+            return JSONResponse(
+                dict(access=True, token=create_token(username), username=username) if token else dict(access=True,
+                                                                                                      username=username))
     raise HTTPException(status_code=401, detail="Not authenticated")
-
-
-
-
-
-
-

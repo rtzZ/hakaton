@@ -8,6 +8,8 @@ from src.models import Building
 
 
 class BuildingFilter(Filter):
+    """ Фильтры поиска объектов """
+
     name__ilike: Optional[str] = Field(Query(None, description="Адрес объекта"), alias="name")
     col_756__in: Optional[list[int]] = Field(Query(None, description="Год постройки"), alias="build_year")
     col_771__in: Optional[list[int]] = Field(Query(None, description="Количество лифтов"), alias="lift_count")

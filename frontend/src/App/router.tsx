@@ -23,7 +23,7 @@ const router = createBrowserRouter([
                 element: <User/>
             },
             {
-                path: '/learn_model',
+                path: '/learn-model',
                 element: <Admin/>
             },
             {

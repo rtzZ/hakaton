@@ -7,7 +7,7 @@ from requests.auth import HTTPBasicAuth
 
 
 class ServiceSender:
-
+    """ Интерфейс обмена между сервисами """
     def __init__(self, username: str, auth: HTTPAuthorizationCredentials, auth_type: str, role: str):
         self.username = username
         self.auth = auth
@@ -35,7 +35,7 @@ class ServiceSender:
 
 
 class Authorization:
-
+    """ Авторизация """
     def __init__(self, role: str):
         self.role = role
         self.url = f"http://{os.environ.get('AUTH_APP_HOST')}:{str(os.environ.get('AUTH_APP_PORT'))}/sign-in"

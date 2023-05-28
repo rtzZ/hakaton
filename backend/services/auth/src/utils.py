@@ -12,6 +12,7 @@ from src.schemas import UserCreate, UserBase, UserCheck
 
 
 async def create_user(user: UserCreate, session: AsyncSession):
+    """ Создает пользователя """
     query = select(User).where(user.username == User.username)
     user_ = (await session.execute(query)).scalars().all()
     if not user_:
@@ -28,6 +29,7 @@ async def create_user(user: UserCreate, session: AsyncSession):
 
 
 async def check_user(credentials: HTTPAuthorizationCredentials, session: AsyncSession) -> tuple:
+    """ Проверяет пользователя Basic auth """
     access = False
     query = select(User).where(credentials.username == User.username)
     user_ = (await session.execute(query)).scalars().all()
@@ -38,6 +40,7 @@ async def check_user(credentials: HTTPAuthorizationCredentials, session: AsyncSe
 
 
 async def check_token(credentials: HTTPAuthorizationCredentials) -> tuple:
+    """ Проверяет пользователя JwtToken auth"""
     access = False
     try:
         payload = jwt.decode(credentials.credentials, "SECRET_STRING1", algorithms=["HS256"])
@@ -48,6 +51,7 @@ async def check_token(credentials: HTTPAuthorizationCredentials) -> tuple:
 
 
 async def check_role(username: str, app_role: str, session: AsyncSession):
+    """ Проверяет роль пользователя """
     query = select(User).filter(username == User.username)
     user = (await session.execute(query)).scalars().one()
     if user:
@@ -58,18 +62,22 @@ async def check_role(username: str, app_role: str, session: AsyncSession):
 
 
 def validate_password(password: str, hashed_password: str):
+    """ Проверяет пароль """
     salt, hashed = hashed_password.split("$")
     return hash_password(password, salt) == hashed
 
 def hash_password(password: str, salt: str = None):
+    """ Хэширует пароль с солью """
     if salt is None:
         salt = get_random_string()
     enc = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 100_000)
     return enc.hex()
 
 def get_random_string(length=12):
+    """ Рандомная строка соль """
     return "".join(random.choice(string.ascii_letters) for _ in range(length))
 
 def create_token(username: str):
+    """ Создает JwtToken """
     jwt_token = jwt.encode(dict(exp=datetime.utcnow() + timedelta(days=14), username=username), "SECRET_STRING1")
     return jwt_token

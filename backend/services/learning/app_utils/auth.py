@@ -6,6 +6,7 @@ from requests.auth import HTTPBasicAuth
 
 
 class ServiceSender:
+    """ Интерфейс обмена между сервисами """
 
     def __init__(self, username: str, auth: HTTPAuthorizationCredentials, auth_type: str, role: str):
         self.username = username
@@ -34,6 +35,7 @@ class ServiceSender:
 
 
 class Authorization:
+    """ Авторизация через сервис auth """
 
     def __init__(self, role: str):
         self.role = role
@@ -48,9 +50,10 @@ class Authorization:
             raise HTTPException(status_code=401, detail="Not authenticated")
         if basic:
             return ServiceSender(username=basic[1], auth=basic_auth, auth_type='Basic', role=self.role)
-        return ServiceSender(username=bearer[1], auth=bearer_auth,  auth_type='Bearer', role=self.role)
+        return ServiceSender(username=bearer[1], auth=bearer_auth, auth_type='Bearer', role=self.role)
 
     def basic_auth(self, auth: HTTPAuthorizationCredentials):
+        """ Авторизация через сервис basic """
         auth = HTTPBasicAuth(auth.username, auth.password)
         role = dict(app_role=self.role)
         resp = requests.post(url=self.url, auth=auth, params=role if role else {})
@@ -59,6 +62,7 @@ class Authorization:
         return True, auth.username
 
     def bearer_auth(self, auth: HTTPAuthorizationCredentials):
+        """ Авторизация через сервис bearer """
         headers = dict(Authorization=f"Bearer {auth.credentials}")
         role = dict(app_role=self.role)
         resp = requests.post(url=self.url, headers=headers, params=role if role else {})

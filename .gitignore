@@ -38,5 +38,5 @@ alembic.ini
 nohup.out
 catboost_info/
 supervisord.*
-
+*.log
 
