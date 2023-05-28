@@ -31,6 +31,8 @@ const validationSchema = yup.object({name: yup.string().required('Обязате
 
 type FormData = yup.InferType<typeof validationSchema>
 
+
+// Формирование значений для фильтров
 const years: string[] = []
 
 let year = +dayjs().format('YYYY')
@@ -48,12 +50,14 @@ for (let i = 1; i < 200; i++) {
     flatCountOpt.push(`${i}`)
 }
 
+
+// Страница получения рекомендаций по объектам
 export const User = () => {
     const dispatch = useDispatch()
-    const previousAllObjects = useSelector(objectsSelector)
+    const previousAllObjects = useSelector(objectsSelector) // получем предыдущие значения рекомендаций, используется если еще не получались новые рекомендации
 
-    const {data: models, isSuccess: isSuccessModels, error: getModels} = useGetLearningModelsQuery()
-    const [sendSelectedModel, {error: sendModelError}] = useSetLearningModelsMutation()
+    const {data: models, isSuccess: isSuccessModels, error: getModels} = useGetLearningModelsQuery() // получение модели
+    const [sendSelectedModel, {error: sendModelError}] = useSetLearningModelsMutation() // отправление выбранной модели
 
     const [build_year, setBuild_year] = useState<string[]>([])
     const [hall_count, setHall_count] = useState<string[]>([])
@@ -63,7 +67,7 @@ export const User = () => {
     const [isSubmit, setIsSubmit] = useState<boolean>(false)
     const [showAllFilters, setShowAllFilters] = useState<boolean>(false)
 
-    const [normalizeRecommendation, setNormalizeRecommendation] = useState<any[] | null>(null);
+    const [normalizeRecommendation, setNormalizeRecommendation] = useState<any[] | null>(null); // форматированные данные для отрисовки таблицы
 
     const [isFetchRecommendation, setIsFetchRecommendation] = useState<boolean>(false)
     const {
@@ -72,7 +76,7 @@ export const User = () => {
         error: errorRecommendation,
         isSuccess: isSuccessRecommendation,
         isFetching: isFetchingRecommendation
-    } = useGetAllObjectsQuery(queryParam, {skip: !isFetchRecommendation})
+    } = useGetAllObjectsQuery(queryParam, {skip: !isFetchRecommendation}) // получение рекомендаций
 
 
     const {control, setValue, handleSubmit, watch, formState: {errors}} = useForm({
@@ -107,8 +111,9 @@ export const User = () => {
             setNormalizeRecommendation(normalizedData)
         }
 
-    }, [isSuccessRecommendation, dispatch, recommendation])
+    }, [isSuccessRecommendation, dispatch, recommendation]) // при загрузке данных нормальзуем их
 
+    // Находим активную модель и инициализируем форму
     useEffect(() => {
         if (isSuccessModels && models?.length) {
             setValue('model', models.filter((model: any) => model.is_selected)[0].id)
@@ -117,6 +122,7 @@ export const User = () => {
         }
     }, [isSuccessModels, sendModelError, setValue, models])
 
+    // Формируем данные для запроса при сабмите формы
     const onSubmit = (queries: FormData) => {
         setIsSubmit(true)
         setIsFetchRecommendation(true)
@@ -264,7 +270,7 @@ export const User = () => {
                 </form>
             </PaperLayout>
             {
-                (previousAllObjects.length || normalizeRecommendation)
+                (previousAllObjects.length || normalizeRecommendation) // отрисовывем рекомендации если только есть данные
                 && <RecommendationTable recommendation={normalizeRecommendation || previousAllObjects}/>
             }
         </PageWrapper>

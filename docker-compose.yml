@@ -14,15 +14,15 @@ services:
 
   auth:
     build:
-      context: ./services/auth
+      context: ./backend/services/auth
     restart: always
     command: >
       sh -c "pipenv run python3 utils/wait_for_db.py &&
              pipenv run python3 utils/init_db.py &&
              pipenv run python3 run.py"
     volumes:
-      - ./services/auth:/app
-      - ./services/utils:/app/utils
+      - ./backend/services/auth:/app
+      - ./backend/services/utils:/app/utils
     ports:
       - "2223:2223"
     env_file:
@@ -32,14 +32,14 @@ services:
 
   learning:
     build:
-      context: ./services/learning
+      context: ./backend/services/learning
     restart: always
     command: >
       sh -c "pipenv run python3 utils/wait_for_db.py &&
              pipenv run python3 run.py"
     volumes:
-      - ./services/learning:/app
-      - ./services/utils:/app/utils
+      - ./backend/services/learning:/app
+      - ./backend/services/utils:/app/utils
     ports:
       - "2225:2225"
     env_file:
@@ -51,14 +51,14 @@ services:
 
   load_data:
     build:
-      context: ./services/load_data
+      context: ./backend/services/load_data
     restart: always
     command: >
       sh -c "pipenv run python3 utils/wait_for_db.py &&
              pipenv run python3 run.py"
     volumes:
-      - ./services/load_data:/app
-      - ./services/utils:/app/utils
+      - ./backend/services/load_data:/app
+      - ./backend/services/utils:/app/utils
     ports:
       - "2224:2224"
     env_file:
@@ -69,14 +69,14 @@ services:
 
   upload_data:
     build:
-      context: ./services/upload_data
+      context: ./backend/services/upload_data
     restart: always
     command: >
       sh -c "pipenv run python3 utils/wait_for_db.py &&
              pipenv run python3 run.py"
     volumes:
-      - ./services/upload_data:/app
-      - ./services/utils:/app/utils
+      - ./backend/services/upload_data:/app
+      - ./backend/services/utils:/app/utils
     ports:
       - "2226:2226"
     env_file:
@@ -87,14 +87,14 @@ services:
 
   upload_data_worker:
     build:
-      context: ./services/upload_data
+      context: ./backend/services/upload_data
     restart: always
     command: >
       sh -c "pipenv run python3 utils/wait_for_db.py &&
              pipenv run rq worker default low high"
     volumes:
-      - ./services/upload_data:/app
-      - ./services/utils:/app/utils
+      - ./backend/services/upload_data:/app
+      - ./backend/services/utils:/app/utils
     env_file:
       - ./.env
     depends_on:

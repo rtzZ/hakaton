@@ -12,6 +12,7 @@ import {steps} from "../const/steps";
 import {SideAlert} from "../../../shared/sideAlert";
 import {ModalLoading} from "../../../entities/loading";
 
+// Страница загрузки данных для модели
 export const UploadData = () => {
     const [fileAttached, setFileAttached] = useState<boolean>(false)
     const [file, setFile] = useState<any>(null)
@@ -20,12 +21,13 @@ export const UploadData = () => {
     const [uploadFile, {
         error: uploadError,
         isLoading: isLoadingFile
-    }] = useUploadDataMutation()
+    }] = useUploadDataMutation() // хук для отправки файла
 
     const {data: status, isLoading, error} = useGetStatusUploadQuery('', {
         pollingInterval: 3000
-    })
+    }) // хук для получения статуса отправки файла, пингуется по времени
 
+    // Преобразование прикрепленного файла и его отправка
     const onUploadFile = (files: any) => {
 
         const file = files[0];
@@ -37,6 +39,7 @@ export const UploadData = () => {
         setFile(formData)
     }
 
+    // Получение индекса активного шага для степпера
     const getActiveStep = () => {
         const stage = status?.stage
         const step = Object.keys(steps).findIndex(el => el === stage)
@@ -44,6 +47,7 @@ export const UploadData = () => {
         return ~step ? step + 1 : -1;
     }
 
+    // отправка файла
     const sendFile = () => {
         uploadFile(file)
     }

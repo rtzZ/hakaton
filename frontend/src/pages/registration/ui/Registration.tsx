@@ -25,12 +25,14 @@ const validationSchema = yup.object(
 )
 
 type FormData = yup.InferType<typeof validationSchema>
+
+// Страница регистрации пользователя
 export const Registration = () => {
     const navigate = useNavigate()
     const {palette} = useTheme()
-    const [isVisiblePass, setIsVisiblePass] = useState<boolean>(false)
+    const [isVisiblePass, setIsVisiblePass] = useState<boolean>(false) // стейт для отображения/ скрытя пароля
 
-    const [registrationFetch, {error: errorRegistration, isLoading, isSuccess}] = useRegistrationMutation()
+    const [registrationFetch, {error: errorRegistration, isLoading, isSuccess}] = useRegistrationMutation() // хук регистрации
 
     const {control, resetField, setError, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema),
@@ -45,7 +47,7 @@ export const Registration = () => {
     useEffect(() => {
         if (errorRegistration) {
             // @ts-ignore
-            if (errorRegistration.status === 401) {
+            if (errorRegistration.status === 401) { // если пользователь не авторизован выводим ошибку
                 setError('login', {type: 'custom', message: 'Данный пользователь уже существует'})
             } else {
                 setError('login', {type: 'custom', message: getErrorMessage(errorRegistration)})

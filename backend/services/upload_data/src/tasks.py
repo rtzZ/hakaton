@@ -7,6 +7,7 @@ from src.service.load_data import start
 
 
 async def upload_files(bites: io.BytesIO):
+    """ Переодическая задача, разбор архива и вызов парсинга """
     job = get_current_job()
     # Загрузка файлов
     job.meta['stage'] = 'init_files'

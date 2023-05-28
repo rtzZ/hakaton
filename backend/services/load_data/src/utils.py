@@ -6,20 +6,19 @@ from src.service.ai import Prediction
 
 
 async def get_model_id(session: AsyncSession):
+    """ Получает информацию о модели """
     query = select(LearningModel).where(LearningModel.is_selected == True)
     model_info = (await session.execute(query)).scalar()
     return model_info
 
 
 async def search_buildigs(building_filter: BuildingFilter, session: AsyncSession, id: str = None):
+    """ Поиск адреса и выдача рекомендации """
     buildings_with_rec = []
     try:
         query = building_filter.filter(select(Building))
         result = await session.execute(query)
         buildings = result.scalars().all()
-        # if not id is None:
-        #     prediction = Prediction(id=id)
-        # else:
         model_info = await get_model_id(session=session)
         prediction = Prediction(id=str(model_info.id), fields=model_info.facts)
 
@@ -35,6 +34,7 @@ async def search_buildigs(building_filter: BuildingFilter, session: AsyncSession
 
 
 async def get_recommendation(building_ids: list[int], session: AsyncSession, id: str = None):
+    """ Возвращает ТОП 3 рекомендации """
     recommendations = []
     try:
         model_info = await get_model_id(session=session)
@@ -48,6 +48,7 @@ async def get_recommendation(building_ids: list[int], session: AsyncSession, id:
 
 
 async def get_model(session: AsyncSession):
+    """ Возвращает модели """
     query = select(LearningModel)
     result = await session.execute(query)
     models = result.scalars().all()
@@ -55,6 +56,7 @@ async def get_model(session: AsyncSession):
 
 
 async def set_model(id: str, session: AsyncSession):
+    """ Устанавливает модель по умолчанию """
     query = select(LearningModel)
     result = await session.execute(query)
     models = result.scalars().all()

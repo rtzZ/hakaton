@@ -26,6 +26,7 @@ const theme = createTheme({
     }
 })
 
+// Точка инициализации
 function App() {
   return (
       <ErrorBoundary>

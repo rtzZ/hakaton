@@ -3,6 +3,7 @@ import {useEffect} from "react";
 
 import {ErrorPage} from "../features/errorPage";
 
+// Компонент обработки по переходу несуществующего пути
 export const OutOfRouter = () => {
     const navigate = useNavigate()
 

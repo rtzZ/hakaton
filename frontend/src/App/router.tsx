@@ -12,6 +12,7 @@ import {Recommendation} from "../pages/recommendation";
 
 import {ErrorModal} from "../shared/error";
 
+// Пути страничек
 const router = createBrowserRouter([
     {
         path: "/",

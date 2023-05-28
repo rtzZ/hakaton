@@ -1,6 +1,7 @@
 import {useEffect} from "react";
 import {Navigate, Outlet, useLocation, useNavigate} from "react-router-dom";
 
+// Защита доступа неавторизованного пользоватя к приватным страницам
 export const PrivateRoute = () => {
     const location = useLocation()
     const navigate = useNavigate()

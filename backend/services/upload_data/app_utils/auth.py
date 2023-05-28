@@ -7,7 +7,7 @@ from requests.auth import HTTPBasicAuth
 
 
 class ServiceSender:
-
+    """ Интерфейс связи с сервисами """
     def __init__(self, username: str, auth: HTTPAuthorizationCredentials, auth_type: str, role: str):
         self.username = username
         self.auth = auth
@@ -35,7 +35,7 @@ class ServiceSender:
 
 
 class Authorization:
-
+    """ Авторизация """
     def __init__(self, role: str):
         self.role = role
         self.url = f"http://{os.environ.get('AUTH_APP_HOST')}:{str(os.environ.get('AUTH_APP_PORT'))}/sign-in"
@@ -52,6 +52,7 @@ class Authorization:
         return ServiceSender(username=bearer[1], auth=bearer_auth,  auth_type='Bearer', role=self.role)
 
     def basic_auth(self, auth: HTTPAuthorizationCredentials):
+        """ Авторизация Basic """
         auth = HTTPBasicAuth(auth.username, auth.password)
         role = dict(app_role=self.role)
         resp = requests.post(url=self.url, auth=auth, params=role if role else {})
@@ -60,6 +61,7 @@ class Authorization:
         return True, auth.username
 
     def bearer_auth(self, auth: HTTPAuthorizationCredentials):
+        """ Авторизация Bearer """
         headers = dict(Authorization=f"Bearer {auth.credentials}")
         role = dict(app_role=self.role)
         resp = requests.post(url=self.url, headers=headers, params=role if role else {})
