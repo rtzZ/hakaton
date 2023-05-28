@@ -7,7 +7,7 @@ from settings.database import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME
 
 
 class Prediction:
-
+    """ Обучение """
     def __init__(self, id: str, fields: str):
         self.id = id
         self.fields = fields
@@ -15,6 +15,7 @@ class Prediction:
         self.engine = create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
 
     def get_prediction(self, build_ids: list) -> list:
+        """ Получить рекомендацию """
         model = pickle.loads(pickle.loads(self.redis.get(self.id)))
         sql_text = f'select work_type_id,{self.fields} from for_model where unom in ('
         sql_text2 = sql_text + ', '.join(map(str, build_ids)) + ');'
@@ -36,6 +37,7 @@ class Prediction:
                 return (model.classes_[b.index(max(b))])
 
     def get_prediction2(self, build_ids: list) -> list:
+        """ Получить ТОП (3) рекомендации """
         model = pickle.loads(pickle.loads(self.redis.get(self.id)))
         sql_text = f'select work_type_id,{self.fields} from for_model where unom in ('
         sql_text2 = sql_text + ', '.join(map(str, build_ids)) + ');'

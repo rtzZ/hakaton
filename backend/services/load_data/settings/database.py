@@ -6,6 +6,8 @@ from sqlalchemy import NullPool
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
 
+""" Настройки БД """
+
 DB_USER = os.environ.get('DB_USER')
 DB_PASS = os.environ.get('DB_PASS')
 DB_NAME = os.environ.get('DB_NAME')
@@ -26,6 +28,8 @@ DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{D
 database = create_async_engine(DATABASE_URL, poolclass=NullPool, future=True, connect_args=connect_args)
 
 async_session = sessionmaker(bind=database, class_=AsyncSession, expire_on_commit=False, autoflush=False)
+
+""" Асинхронные сессии"""
 
 async def get_session() -> AsyncSession:
     async with async_session() as session:

@@ -8,6 +8,7 @@ from src.models import Building
 
 
 class BuildingFilter(Filter):
+    """ Получить объекты по фильтрам"""
     address__ilike: Optional[str] = Field(Query(None, description="Адрес объекта"), alias="name")
     d__ilike: Optional[str] = Field(Query(None, description="Дом объекта"), alias="house_number")
     col_756__in: Optional[list[int]] = Field(Query(None, description="Год постройки"), alias="build_year")
@@ -17,7 +18,6 @@ class BuildingFilter(Filter):
     col_761__in: Optional[list[int]] = Field(Query(None, description="Количество квартир"), alias="flat_count")
     col_770__ilike: Optional[str] = Field(Query(None, description="Аварийность"), alias="accident_id")
     unom__in: Optional[list[int]] = Field(Query(None, description="build_id"), alias="build_id")
-    # col_782__in: Optional[list[int]] = Field(Query(None, description="build_id"), alias="build_id")
 
     class Constants(Filter.Constants):
         model = Building

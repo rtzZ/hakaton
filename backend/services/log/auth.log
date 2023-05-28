@@ -2818,3 +2818,4 @@ INFO:     127.0.0.1:57202 - "POST /sign-in?app_role=user HTTP/1.1" 200 OK
 INFO:     127.0.0.1:57214 - "POST /sign-in?app_role=user HTTP/1.1" 200 OK
 INFO:     127.0.0.1:35656 - "POST /sign-in?app_role=admin HTTP/1.1" 200 OK
 INFO:     127.0.0.1:35660 - "POST /sign-in?app_role=admin HTTP/1.1" 200 OK
+INFO:     167.94.138.35:38736 - "GET / HTTP/1.1" 404 Not Found

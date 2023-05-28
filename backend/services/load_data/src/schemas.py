@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import UUID4, BaseModel, EmailStr, Field, validator
 from pydantic.validators import datetime
 
+""" Рыба файл для схем """
 
 class UserCheck(BaseModel):
     """  Проверяет sign-in запрос """

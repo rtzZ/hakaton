@@ -1,6 +1,5 @@
 from dataclasses import Field
 from typing import Annotated, List, Optional
-
 from fastapi import APIRouter, Depends, Query
 from fastapi.security import HTTPAuthorizationCredentials
 from fastapi_filter import FilterDepends
@@ -22,6 +21,7 @@ async def search_building(
         id: str = None,
         building_filter: BuildingFilter = FilterDepends(BuildingFilter),
         session: AsyncSession = Depends(get_session)) -> list:
+    """ Получить объекты с рекомендацией """
     buildings = await search_buildigs(building_filter=building_filter, id=id, session=session)
     return buildings
 
@@ -29,17 +29,20 @@ async def search_building(
 @router.get("/recommendation", status_code=200, dependencies=[Depends(Authorization(role='user'))])
 async def create_recommendation_by_unom(building_ids: Annotated[list[int] | None, Query()],
                                         session: AsyncSession = Depends(get_session)) -> list:
+    """ Получить 3 рекомендации на объект """
     recommendations = await get_recommendation(building_ids=building_ids, session=session)
     return recommendations
 
 
 @router.get("/learning_models", status_code=200, dependencies=[Depends(Authorization(role='user'))])
 async def fetch_learning_model(session: AsyncSession = Depends(get_session)) -> list:
+    """ Получить модели """
     models = await get_model(session=session)
     return models
 
 
 @router.post("/learning_models", status_code=200, dependencies=[Depends(Authorization(role='user'))])
 async def set_learning_model(id: str, session: AsyncSession = Depends(get_session)) -> list:
+    """ Выбрать модель по умолчанию """
     name = await set_model(id=id, session=session)
     return [name]
