@@ -52,3 +52,19 @@ INFO:     84.51.98.55:60743 - "GET /learning_fields HTTP/1.1" 200 OK
 INFO:     46.242.112.193:60967 - "GET /learning_fields HTTP/1.1" 200 OK
 INFO:     46.242.112.193:60967 - "GET /learning_fields HTTP/1.1" 200 OK
 INFO:     84.51.98.55:60771 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55183 - "OPTIONS /learning_fields HTTP/1.1" 400 Bad Request
+INFO:     46.242.112.193:49238 - "OPTIONS /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49238 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49241 - "OPTIONS /learning_fields?fields=unom,col_754,col_756,col_758_id,col_759,col_760,col_761,col_762,col_763,col_764,col_765,col_766,col_769_id,col_770_id,col_771,col_772,col_775_id,col_781_id,col_3243_id,col_3363,cnt,asupr,gormost,edc,mgi,cafap,mos_gas,mvk,ng&model_name=%D0%9C%D0%BE%D1%8F%20%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%201 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49241 - "POST /learning_fields?fields=unom,col_754,col_756,col_758_id,col_759,col_760,col_761,col_762,col_763,col_764,col_765,col_766,col_769_id,col_770_id,col_771,col_772,col_775_id,col_781_id,col_3243_id,col_3363,cnt,asupr,gormost,edc,mgi,cafap,mos_gas,mvk,ng&model_name=%D0%9C%D0%BE%D1%8F%20%D0%BC%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C%201 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49242 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55972 - "GET /docs HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55972 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     46.242.112.193:50120 - "GET /learning_fields HTTP/1.1" 500 Internal Server Error
+INFO:     46.242.112.193:50121 - "GET /learning_fields HTTP/1.1" 500 Internal Server Error
+INFO:     46.242.112.193:50127 - "GET /learning_fields HTTP/1.1" 500 Internal Server Error
+INFO:     84.51.98.55:61103 - "OPTIONS /learning_fields HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61103 - "GET /learning_fields HTTP/1.1" 500 Internal Server Error
+INFO:     84.51.98.55:61218 - "GET /learning_fields HTTP/1.1" 500 Internal Server Error
+INFO:     84.51.98.55:61268 - "GET /docs HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61268 - "GET /openapi.json HTTP/1.1" 200 OK

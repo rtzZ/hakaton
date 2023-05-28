@@ -561,3 +561,50 @@ INFO:     213.87.136.20:47759 - "OPTIONS /learning_models?id=4bcca572-4dbb-4217-
 INFO:     213.87.136.20:47759 - "GET /learning_models?id=4bcca572-4dbb-4217-a0e4-b997a558bb5b HTTP/1.1" 200 OK
 INFO:     213.87.136.20:23450 - "OPTIONS /buildings?name=%D0%A0%D0%BE%D0%BC%D0%B0%D0%BD HTTP/1.1" 200 OK
 INFO:     213.87.136.20:23450 - "GET /buildings?name=%D0%A0%D0%BE%D0%BC%D0%B0%D0%BD HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55181 - "OPTIONS /buildings?name=%D0%91%D0%B0%D0%B9%D0%BA%D0%B0%D0%BB%D1%8C%D1%81%D0%BA%D0%B0%D1%8F HTTP/1.1" 400 Bad Request
+INFO:     84.51.98.55:55181 - "OPTIONS /buildings?name=%D0%91%D0%B0%D0%B9%D0%BA%D0%B0%D0%BB%D1%8C%D1%81%D0%BA%D0%B0%D1%8F HTTP/1.1" 400 Bad Request
+INFO:     84.51.98.55:55181 - "OPTIONS /buildings?name=%D0%91%D0%B0%D0%B9%D0%BA%D0%B0%D0%BB%D1%8C%D1%81%D0%BA%D0%B0%D1%8F HTTP/1.1" 400 Bad Request
+INFO:     84.51.98.55:55181 - "OPTIONS /buildings?name=%D0%91%D0%B0%D0%B9%D0%BA%D0%B0%D0%BB%D1%8C%D1%81%D0%BA%D0%B0%D1%8F HTTP/1.1" 400 Bad Request
+INFO:     84.51.98.55:55181 - "OPTIONS /learning_models HTTP/1.1" 400 Bad Request
+INFO:     84.51.98.55:55184 - "OPTIONS /learning_models?id=4bcca572-4dbb-4217-a0e4-b997a558bb5b HTTP/1.1" 400 Bad Request
+INFO:     46.242.112.193:49243 - "OPTIONS /learning_models HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "OPTIONS /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "OPTIONS /buildings?name=%D0%9A%D1%83%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "GET /buildings?name=%D0%9A%D1%83%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "OPTIONS /buildings?build_id=12331 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "GET /buildings?build_id=12331 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "OPTIONS /recommendation?building_ids=12331 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49243 - "GET /recommendation?building_ids=12331 HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55899 - "OPTIONS /learning_models HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55899 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55899 - "OPTIONS /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55899 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55904 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55904 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49246 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     46.242.112.193:49247 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55952 - "GET /docs HTTP/1.1" 200 OK
+INFO:     84.51.98.55:55952 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     46.242.112.193:50118 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     46.242.112.193:50118 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61067 - "OPTIONS /learning_models HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61067 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61067 - "OPTIONS /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61067 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:50123 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     46.242.112.193:50124 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     95.84.241.171:51209 - "OPTIONS /learning_models HTTP/1.1" 200 OK
+INFO:     95.84.241.171:51209 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     95.84.241.171:51209 - "OPTIONS /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     95.84.241.171:51209 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:50124 - "GET /buildings?name=%D0%9A%D1%83%D1%81%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61116 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61117 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61229 - "GET /learning_models HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61230 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61265 - "GET /docs HTTP/1.1" 200 OK
+INFO:     84.51.98.55:61265 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     46.242.112.193:50129 - "GET /learning_models?id=cd8958c2-017b-41f5-9c61-ce4d2aade3f9 HTTP/1.1" 200 OK
+INFO:     46.242.112.193:50128 - "GET /learning_models HTTP/1.1" 200 OK

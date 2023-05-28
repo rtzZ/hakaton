@@ -147,49 +147,49 @@ def _load_model_etl():
 def start(files_io: dict):
     """ Создание структур """
     job = get_current_job()
-    try:
-        sql_files = {
-            'init_stage': f'{os.getcwd()}/src/service/sql/init_stage.sql',
-            'init': f'{os.getcwd()}/src/service/sql/init.sql',
-            'init_model': f'{os.getcwd()}/src/service/sql/init_model.sql',
-            'etl': f'{os.getcwd()}/src/service/sql/etl.sql',
-            'model_etl': f'{os.getcwd()}/src/service/sql/model_etl.sql',
-        }
+    # try:
+    sql_files = {
+        'init_stage': f'{os.getcwd()}/src/service/sql/init_stage.sql',
+        'init': f'{os.getcwd()}/src/service/sql/init.sql',
+        'init_model': f'{os.getcwd()}/src/service/sql/init_model.sql',
+        'etl': f'{os.getcwd()}/src/service/sql/etl.sql',
+        'model_etl': f'{os.getcwd()}/src/service/sql/model_etl.sql',
+    }
 
-        # Подготовка источника
-        job.meta['stage'] = 'init_stage'
-        execute_sql(sql_files.get('init_stage'))
+    # Подготовка источника
+    job.meta['stage'] = 'init_stage'
+    execute_sql(sql_files.get('init_stage'))
 
-        # Инициализация основных таблиц
-        job.meta['stage'] = 'init'
-        job.save_meta()
-        execute_sql(sql_files.get('init'))
+    # Инициализация основных таблиц
+    job.meta['stage'] = 'init'
+    job.save_meta()
+    execute_sql(sql_files.get('init'))
 
-        # Инициализация таблиц для построения датасетов
-        job.meta['stage'] = 'init_model'
-        job.save_meta()
-        execute_sql(sql_files.get('init_model'))
+    # Инициализация таблиц для построения датасетов
+    job.meta['stage'] = 'init_model'
+    job.save_meta()
+    execute_sql(sql_files.get('init_model'))
 
-        load(files_io=files_io)  # Загрузка данных stage
+    load(files_io=files_io)  # Загрузка данных stage
 
-        # Преобразование и нормализация данных
-        job.meta['stage'] = 'etl'
-        job.save_meta()
-        execute_sql(sql_files.get('etl'))
+    # Преобразование и нормализация данных
+    job.meta['stage'] = 'etl'
+    job.save_meta()
+    execute_sql(sql_files.get('etl'))
 
-        # Построение датасета
-        job.meta['stage'] = 'model_etl'
-        job.save_meta()
-        print(sql_files.get('model_etl'))
-        execute_sql(sql_files.get('model_etl'))  # +
-        _load_model_etl()
+    # Построение датасета
+    job.meta['stage'] = 'model_etl'
+    job.save_meta()
+    print(sql_files.get('model_etl'))
+    execute_sql(sql_files.get('model_etl'))  # +
+    _load_model_etl()
 
-        # Построение датасета
-        job.meta['stage'] = 'finish'
-        job.save_meta()
-    except:
-        job.meta['stage'] = 'finish'
-        job.save_meta()
+    # Построение датасета
+    job.meta['stage'] = 'finish'
+    job.save_meta()
+    # except:
+    #     job.meta['stage'] = 'finish'
+    #     job.save_meta()
 
     # execute_sql(sql_files.get('create_model'))
     #
