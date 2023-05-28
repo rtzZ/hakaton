@@ -32,7 +32,7 @@ export const Admin = () => {
     const [errorValidation, setErrorValidation] = useState<string>('')
 
     const {data: learnFields = [], error: errorGetFields, isLoading: getFieldsLoading} = useGetLearnFieldsQuery() // получение признаков обучения модели
-    const [learnFetch, {error: learnError, isLoading: isLoadingLearn, isSuccess: isSuccessLearnFetch}] = useLearnModelMutation() //
+    const [learnFetch, {error: learnError, isLoading: isLoadingLearn, isSuccess: isSuccessLearnFetch}] = useLearnModelMutation() // обучение модели
 
     const {control, reset, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema),
@@ -45,7 +45,7 @@ export const Admin = () => {
         }
     }, [errorValidation])
 
-    useEffect(() => {
+    useEffect(() => { // сброс имени модели
         if (isSuccessLearnFetch) {
             reset()
         }

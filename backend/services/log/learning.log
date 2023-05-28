@@ -32,3 +32,5 @@ INFO:     178.176.75.89:5229 - "GET /learning_fields HTTP/1.1" 200 OK
 INFO:     178.176.75.89:27465 - "OPTIONS /learning_fields HTTP/1.1" 200 OK
 INFO:     178.176.75.89:27465 - "GET /learning_fields HTTP/1.1" 200 OK
 INFO:     178.176.75.89:27465 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     178.176.75.89:5838 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     178.176.75.89:25267 - "GET /learning_fields HTTP/1.1" 200 OK

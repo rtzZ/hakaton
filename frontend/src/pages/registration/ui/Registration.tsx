@@ -48,7 +48,7 @@ export const Registration = () => {
         // блок обработки ошибок
         if (errorRegistration) {
             // @ts-ignore
-            if (errorRegistration.status === 401)
+            if (errorRegistration.status === 401) {
                 setError('login', {type: 'custom', message: 'Данный пользователь уже существует'})
             } else {
                 setError('login', {type: 'custom', message: getErrorMessage(errorRegistration)})
