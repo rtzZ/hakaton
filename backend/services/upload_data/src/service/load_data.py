@@ -13,6 +13,7 @@ STG_PREFIX = 'stg_'
 e = create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
 
 def load_data_1(files_io: dict):
+    """ Загрузка информации о многоквартирных домах с их характеристиками """
     print(files_io.keys())
 
     filename = '1.xlsx'
@@ -55,16 +56,19 @@ def load_data_1(files_io: dict):
 
 
 def _rename_cols(df):
+    """ Переименование колонок """
     return df.rename(columns={col: col.lower() for col in df.columns})
 
 
 def _date_correct(df, pattern, columns):
+    """ Корректировка типов """
     for col in columns:
         df[col] = df[col].apply(lambda x: datetime.strptime(x, pattern) if x else x)
     return df
 
 
 def _df_to_sql(df, key_id, table_name, type_id):
+    """ Преобразование данных """
     sql = f'select {key_id} from {table_name}'
     print(sql)
     exists_df = pd.read_sql(sql, con=e, dtype=type_id)
@@ -82,6 +86,7 @@ def load_data(
         date_correct=None,  # (pattern: str, columns: tuple) # Преобразовать поля
         type_id=str
 ):
+    """ Загрузка датасетов 2,3,4,4.1,5 """
     if skip_rows:
         df = pd.read_excel(io=files_io[filename], dtype=str, sheet_name=sheet_name, skiprows=skip_rows)
     else:
@@ -100,6 +105,7 @@ def load_data(
 
 
 def _insert_data(df, table_name, key_id='id', type_id=str):
+    """ Вставка данных """
     print(f'load data to {table_name} -> ', end='')
     df = _df_to_sql(df, key_id=key_id, table_name=table_name, type_id=type_id)
     df.to_sql(name=table_name, if_exists='append', con=e, index=False)
@@ -107,6 +113,7 @@ def _insert_data(df, table_name, key_id='id', type_id=str):
 
 
 def execute_sql(sql_file):
+    """ Выполняеет sql инструкции """
     with open(sql_file, 'r', encoding='UTF-8') as f:
         sql = text(f.read())
 
@@ -117,12 +124,14 @@ def execute_sql(sql_file):
 
 
 def load(files_io: dict):
+    """ Загрузка файлов и конфигураций """
     load_data_1(files_io=files_io)
     for kwargs in params:
         kwargs.update({'files_io': files_io})
         load_data(**kwargs)
 
 def _load_model_etl():
+    """ Загрузка модули данных"""
     print(f'Start update model')
     sql_text = 'SELECT * FROM public.model_test_asv_prefinal'
     data = pd.read_sql_query(sql=text(sql_text), con=e.connect())
@@ -136,6 +145,7 @@ def _load_model_etl():
 
 
 def start(files_io: dict):
+    """ Создание структур """
     job = get_current_job()
     try:
         sql_files = {

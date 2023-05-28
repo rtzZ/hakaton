@@ -2,7 +2,7 @@ import React from 'react'
 import {ErrorPage} from "../features/errorPage";
 
 // Обработчик ошибки во время рендера и в хуках
-export class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props)
 
@@ -21,3 +21,5 @@ export class ErrorBoundary extends React.Component {
         return this.props.children
     }
 }
+
+export default ErrorBoundary

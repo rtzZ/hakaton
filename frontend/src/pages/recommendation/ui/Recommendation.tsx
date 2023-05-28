@@ -13,8 +13,9 @@ import {LoadingPage} from "../../../features/loadingPage";
 import {objectInfoToUi} from "../const/objectInfoToUI";
 import {objectRecommendationToUI} from "../const/objectRecommendationToUI";
 
+// Блоки рекомендаций
 const RecommendationBlock = ({id}: any) => {
-    const {data: recommendations, isLoading, error} = useGetObjectRecommendationsQuery(id)
+    const {data: recommendations, isLoading, error} = useGetObjectRecommendationsQuery(id) // получение рекоммендаций
 
     if (error) {
         return <SideAlert severity='error'>Не удалось загрузить рекомендации</SideAlert>
@@ -65,10 +66,12 @@ const RecommendationBlock = ({id}: any) => {
     )
 }
 
+
+// Страница рекоммендаций
 export const Recommendation = () => {
     const {id} = useParams()
 
-    const {data, error, isLoading, isSuccess} = useGetObjectInfoQuery(id)
+    const {data, error, isLoading, isSuccess} = useGetObjectInfoQuery(id) // получение полной информации объекта
 
     if (error) {
         return <ErrorPage error={error}/>

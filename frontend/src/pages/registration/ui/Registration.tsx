@@ -45,9 +45,10 @@ export const Registration = () => {
     });
 
     useEffect(() => {
+        // блок обработки ошибок
         if (errorRegistration) {
             // @ts-ignore
-            if (errorRegistration.status === 401) { // если пользователь не авторизован выводим ошибку
+            if (errorRegistration.status === 401)
                 setError('login', {type: 'custom', message: 'Данный пользователь уже существует'})
             } else {
                 setError('login', {type: 'custom', message: getErrorMessage(errorRegistration)})

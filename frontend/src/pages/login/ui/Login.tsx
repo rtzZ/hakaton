@@ -22,13 +22,15 @@ const validationSchema = yup.object(
 
 type FormData = yup.InferType<typeof validationSchema>
 
+
+// Cтраница логина
 export const Login = () => {
     const navigate = useNavigate()
 
     const {palette} = useTheme()
     const [isVisiblePass, setIsVisiblePass] = useState<boolean>(false)
 
-    const [loginFetch, {data: token, error: errorLogin, isLoading, isSuccess}] = useLoginMutation()
+    const [loginFetch, {data: token, error: errorLogin, isLoading, isSuccess}] = useLoginMutation() // хук для логина
     
     const {control, resetField, setError, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema),
@@ -38,10 +40,10 @@ export const Login = () => {
         }
     });
 
+    // обработка ошибок логирования
     useEffect(() => {
         if (errorLogin) {
             resetField('password')
-
             // @ts-ignore
             if (errorLogin.status === 401) {
                 setError('login', {message: 'Неправильный логин или пароль'})

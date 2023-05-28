@@ -25,12 +25,14 @@ import {
 const validationSchema = yup.object({name: yup.string().required('Обязательное поле'),})
 
 type FormData = yup.InferType<typeof validationSchema>
+
+// Страница Обучения модели
 export const Admin = () => {
     const [choosenFields, setChosenFields] = useState<readonly string[]>([]);
     const [errorValidation, setErrorValidation] = useState<string>('')
 
-    const {data: learnFields = [], error: errorGetFields, isLoading: getFieldsLoading} = useGetLearnFieldsQuery()
-    const [learnFetch, {error: learnError, isLoading: isLoadingLearn, isSuccess: isSuccessLearnFetch}] = useLearnModelMutation()
+    const {data: learnFields = [], error: errorGetFields, isLoading: getFieldsLoading} = useGetLearnFieldsQuery() // получение признаков обучения модели
+    const [learnFetch, {error: learnError, isLoading: isLoadingLearn, isSuccess: isSuccessLearnFetch}] = useLearnModelMutation() //
 
     const {control, reset, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema),
