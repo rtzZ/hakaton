@@ -42,3 +42,13 @@ INFO:     46.242.112.193:60402 - "OPTIONS /learning_fields HTTP/1.1" 200 OK
 INFO:     46.242.112.193:60402 - "GET /learning_fields HTTP/1.1" 200 OK
 INFO:     46.242.112.193:60481 - "GET /learning_fields HTTP/1.1" 200 OK
 INFO:     46.242.112.193:60485 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:60611 - "OPTIONS /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:60611 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:60916 - "OPTIONS /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:60916 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:60916 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     84.51.98.55:60743 - "OPTIONS /learning_fields HTTP/1.1" 200 OK
+INFO:     84.51.98.55:60743 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:60967 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     46.242.112.193:60967 - "GET /learning_fields HTTP/1.1" 200 OK
+INFO:     84.51.98.55:60771 - "GET /learning_fields HTTP/1.1" 200 OK
