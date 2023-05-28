@@ -29,4 +29,4 @@ class UserCheck(BaseModel):
 
 class User(UserBase):
     """ Формирует тело ответа с деталями пользователя и токеном """
-    token: TokenBase = {}
+    token: str = None
