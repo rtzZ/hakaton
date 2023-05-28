@@ -147,49 +147,49 @@ def _load_model_etl():
 def start(files_io: dict):
     """ Создание структур """
     job = get_current_job()
-    try:
-        sql_files = {
-            'init_stage': f'{os.getcwd()}/src/service/sql/init_stage.sql',
-            'init': f'{os.getcwd()}/src/service/sql/init.sql',
-            'init_model': f'{os.getcwd()}/src/service/sql/init_model.sql',
-            'etl': f'{os.getcwd()}/src/service/sql/etl.sql',
-            'model_etl': f'{os.getcwd()}/src/service/sql/model_etl.sql',
-        }
+    # try:
+    sql_files = {
+        'init_stage': f'{os.getcwd()}/src/service/sql/init_stage.sql',
+        'init': f'{os.getcwd()}/src/service/sql/init.sql',
+        'init_model': f'{os.getcwd()}/src/service/sql/init_model.sql',
+        'etl': f'{os.getcwd()}/src/service/sql/etl.sql',
+        'model_etl': f'{os.getcwd()}/src/service/sql/model_etl.sql',
+    }
 
-        # Подготовка источника
-        job.meta['stage'] = 'init_stage'
-        execute_sql(sql_files.get('init_stage'))
+    # Подготовка источника
+    job.meta['stage'] = 'init_stage'
+    execute_sql(sql_files.get('init_stage'))
 
-        # Инициализация основных таблиц
-        job.meta['stage'] = 'init'
-        job.save_meta()
-        execute_sql(sql_files.get('init'))
+    # Инициализация основных таблиц
+    job.meta['stage'] = 'init'
+    job.save_meta()
+    execute_sql(sql_files.get('init'))
 
-        # Инициализация таблиц для построения датасетов
-        job.meta['stage'] = 'init_model'
-        job.save_meta()
-        execute_sql(sql_files.get('init_model'))
+    # Инициализация таблиц для построения датасетов
+    job.meta['stage'] = 'init_model'
+    job.save_meta()
+    execute_sql(sql_files.get('init_model'))
 
-        load(files_io=files_io)  # Загрузка данных stage
+    load(files_io=files_io)  # Загрузка данных stage
 
-        # Преобразование и нормализация данных
-        job.meta['stage'] = 'etl'
-        job.save_meta()
-        execute_sql(sql_files.get('etl'))
+    # Преобразование и нормализация данных
+    job.meta['stage'] = 'etl'
+    job.save_meta()
+    execute_sql(sql_files.get('etl'))
 
-        # Построение датасета
-        job.meta['stage'] = 'model_etl'
-        job.save_meta()
-        print(sql_files.get('model_etl'))
-        execute_sql(sql_files.get('model_etl'))  # +
-        _load_model_etl()
+    # Построение датасета
+    job.meta['stage'] = 'model_etl'
+    job.save_meta()
+    print(sql_files.get('model_etl'))
+    execute_sql(sql_files.get('model_etl'))  # +
+    _load_model_etl()
 
-        # Построение датасета
-        job.meta['stage'] = 'finish'
-        job.save_meta()
-    except:
-        job.meta['stage'] = 'finish'
-        job.save_meta()
+    # Построение датасета
+    job.meta['stage'] = 'finish'
+    job.save_meta()
+    # except:
+    #     job.meta['stage'] = 'finish'
+    #     job.save_meta()
 
     # execute_sql(sql_files.get('create_model'))
     #
@@ -201,34 +201,3 @@ def start(files_io: dict):
     # data.loc[data['col_754'] != -1, 'col_754'] = 0
     # data = data.loc[:, (data != data.iloc[0]).any()]
     # data.to_sql(name='model_test_asv_final', if_exists='append', con=e, index=False)
-
-lala = {
-    "unom": "ID Адреса",
-    "col_754": "Назначение",
-    "col_756": "Год постройки",
-    "col_758_id": "Серии проекта",
-    "col_759": "Количество этажей",
-    "col_760": "Количество подъездов",
-    "col_761": "Количество квартир",
-    "col_762": "Общая площадь",
-    "col_763": "Общая площадь жилых помещений",
-    "col_764": "Общая площадь нежилых помещений",
-    "col_765": "Строительный объем",
-    "col_766": "Износ объекта (по БТИ)",
-    "col_769_id": "Идентификатор материала стен",
-    "col_770_id": "Идентификатор признака аварийности здания",
-    "col_771": "Количество пассажирских лифтов",
-    "col_772": "Количество грузопассажирских лифтов",
-    "col_775_id": "Идентификатор очередности уборки кровли",
-    "col_781_id": "Идентификатор материала кровли",
-    "col_3243_id": "Идентификатор статуса управления МКД",
-    "col_3363": "Количество грузовых лифтов",
-    "cnt": "Все инциденты",
-    "asupr": "Инциденты из системы ASUPR",
-    "gormost": "Инциденты из системы GORMOST",
-    "edc": "Инциденты из системы EDC",
-    "mgi": "Инциденты из системы MGI",
-    "cafap": "Инциденты из системы CAFAP",
-    "mos_gas": "Инциденты из системы MOS_GAS",
-    "mvk": "Инциденты из системы MVK",
-    "ng": "Инциденты из системы NG"}

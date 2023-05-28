@@ -34,7 +34,7 @@ export const UploadData = () => {
         const formData = new FormData();
         formData.append('file', file)
 
-        setFileName(file.name)
+        setFileName(file?.name || 'default_name')
         setFileAttached(true)
         setFile(formData)
     }

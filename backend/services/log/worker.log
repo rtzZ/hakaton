@@ -60,3 +60,4 @@ Success update model
 19:05:25 Cleaning registries for queue: default
 19:05:25 Cleaning registries for queue: low
 19:05:25 Cleaning registries for queue: high
+19:26:37 default: src.tasks.upload_files(<_io.BytesIO object at 0x7f50b32cfa10>) (b0b28d9a-ba2a-4579-a46f-f4f2b15fb6a7)
