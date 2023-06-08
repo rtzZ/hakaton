@@ -12,6 +12,7 @@ from src.service.table_config import params
 STG_PREFIX = 'stg_'
 e = create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
 
+
 def load_data_1(files_io: dict):
     """ Загрузка информации о многоквартирных домах с их характеристиками """
     print(files_io.keys())
@@ -129,6 +130,7 @@ def load(files_io: dict):
     for kwargs in params:
         kwargs.update({'files_io': files_io})
         load_data(**kwargs)
+
 
 def _load_model_etl():
     """ Загрузка модули данных"""

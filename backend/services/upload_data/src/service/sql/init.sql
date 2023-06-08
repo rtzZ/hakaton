@@ -79,7 +79,6 @@ create table if not exists col_103506 (
     name text not null   -- Наименование
 );
 
-
 create table if not exists address (
   id serial primary key,
   address text,
@@ -90,15 +89,10 @@ create table if not exists address (
   soor text
 );
 
-
 -- Данные о объекте с технико-экономическими характеристиками
 -- для определения типа объекта - многоквартирный дом, необходимо выполнить фильтрацию данных, соответствующую следующим условиям: COL_2463 = 42875644 И COL_3163 = 58761330
 create table if not exists object (
     id serial primary key,
-    -- name text, -- адрес
-    -- login text,
-    -- parent_id integer,
-    -- col_782	integer, -- UNOM
     unom integer, -- UNOM
     col_781_id integer, -- Идентификатор материала кровли, внешний ключ на справочник OBJ_988 – «Материалы кровли по БТИ»
     col_775_id integer, -- Идентификатор очередности уборки кровли, внешний ключ на справочник OBJ_983 – «Очередность уборки кровли»
@@ -140,26 +134,16 @@ create table if not exists object (
     foreign key(unom) references address(id)
 );
 
-
-
 -- Данные о событиях на объекте
 -- Инциденты, зарегистрированные на объектах городского хозяйства
 create table if not exists incident (
     id serial primary key,
-    -- name text, -- Наименование
-    -- source	text, -- Источник
     event_id integer,
     system_id integer,
     date_ext_created timestamp,
     date_completed timestamp,
     date_ext_completed timestamp,
     unom integer
-    --date_cr	timestamp, -- Дата создания во внешней системе
-    --date_end timestamp, -- Дата закрытия
-    --district text, -- Округ
-    --address text, -- Адрес
-    --unom integer, -- UNOM
-    --date_finished timestamp -- Дата и время завершения события во
 );
 
 -- Классификатор видов работ, проводимых на различных типах объектов
@@ -177,10 +161,8 @@ create table if not exists work_type (
 -- Данные о работах, проведенных в прошлых периодах
 -- Работы по капитальному ремонту, проведенные в многоквартирных домах
 create table if not exists work (
-    -- global_id serial primary key, -- Уникальный идентификатор работы на объекте (в таблице)
     id serial primary key, -- Уникальный идентификатор работы на объекте (в таблице)
     period integer, -- Период работы
-    -- work_name text, -- Наименование работы
     work_type_id integer,
     num_entrance integer, -- Подъезд
     elevatornumber text, -- Номер лифта
@@ -188,45 +170,8 @@ create table if not exists work (
     plan_date_end timestamp, -- Плановая дата окончания работы
     fact_date_start	timestamp, -- Фактическая дата начала работы
     fact_date_end timestamp, -- Фактическая дата окончания работы
-    -- state varchar(20), -- В исходной таблице отсутствует -- Статус работы
-    -- admarea	text, -- Административный округ
-    -- district text, -- Район
-    -- address	text, -- Адрес
     unom integer -- Код адреса по АР
-    -- table_4_1_id integer not null default -1,
-    -- foreign key(table_4_1_id) references table_4_1(id)
 );
-
--- Виды работ по содержанию и ремонту общего имущества многоквартирных домов
--- create table if not exists work_type_common (
---    id serial primary key,-- Идентификатор
---    name text, -- Наименование
---    login text, -- Код
---    parent_id integer, -- Идентификатор родительской группы работ, внешний ключ на справочник OBJ_1327 – «Группы видов работ по содержанию и ремонту общего имущества МКД»
---    col_4923 integer, -- Данные актуальные до отчетного года
---    col_4764 integer, -- Данные актуальны до 2015
---    col_4489 integer, -- Рекомендуемая периодичность. Величина
---    col_4488 integer, -- Идентификатор периодичности проведения работ, внешний ключ на справочник OBJ_596 – «Периодичность проведения работ»
---    col_1239 text, -- Номер
---    col_1157 text, -- Описание
---    col_1045 integer, -- Идентификатор единицы измерения, внешний ключ на справочник OBJ_296 – «Единицы измерения»
---   col_1044 text, -- Рекомендуемая периодичность
---    col_20062 integer,	-- Идентификатор родительского вида работ, внешний ключ на справочник OBJ_597 – «Виды работ по содержанию и ремонту общего имущества МКД»
---    col_20063 integer,-- Идентификатор связанного с видом работ элемента имущества, внешний ключ на справочник OBJ_11000 – «Тип элемента общего имущества»
---    col_20060 integer, -- Хз
---    col_20061 integer -- Хз
-    -- В исходной таблице отсутствуют
-    --col_4081 integer, -- Порядок сортировки
-    --col_1171_id integer, -- Идентификатор единицы измерения, внешний ключ на справочник OBJ_296 – «Единицы измерения»
-    --col_1156 integer, -- Плановая периодичность работ. Величина
-    --col_1051_id integer, -- Идентификатор периодичности проведения работ, внешний ключ на справочник OBJ_596 – «Периодичность проведения работ»
-    --col_1050 integer, -- Плановая стоимость в год за работы
-    --col_1049 integer, -- Плановая стоимость за единицу работ
-    --col_1048 integer, -- Плановое количество\объем
-    --col_1047_id integer, -- -Идентификатор вида работ, внешний ключ на справочник OBJ_597 – «Виды работ по содержанию и ремонту общего имущества МКД»
-    --col_1046 varchar(2000) -- Номер
---);
-
 
 -- Классификатор типов событий, регистрируемых на объектах в мастер-системах
 -- Типы событий, регистрируемых по типу объекта - многоквартирный дом

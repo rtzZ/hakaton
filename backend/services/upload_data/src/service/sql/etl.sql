@@ -140,32 +140,6 @@ select
     WHERE o.col_2463_id = 42875644 AND o.col_3163_id = 58761330;
 
 
--- Не забираем адреса из инцидентов и работ!
-/*
---Адреса из инцидентов
-insert into address
-select unom, max(address)
-from stg_incident
-where unom not in (select id from address)
-group by unom;
-
--- Адреса из работ
-insert into address
-select unom, max(address)
-from stg_work
-where unom not in (select id from address)
-group by unom;
-*/
-
--- Не забираем источник из событий (только из инцидентов!)
-/*
--- Источник из событий
-insert into system (name)
-select distinct system
-from stg_event_system
-where system not in (select name from system);
-*/
-
 -- Источник из инцидентов
 insert into system (name)
 select distinct source
@@ -198,13 +172,6 @@ select
     work_short_name
 from stg_work_type
 where name not in (select name from work_type);
-
--- Из work -- могут быть работы отсутстующие в work_type, либо некорректно написанные
--- insert into work_type (name)
--- select distinct work_name
--- from stg_work
--- where work_name not in (select name from work_type);
-
 
 -- Работы
 
@@ -266,23 +233,5 @@ select
 from stg_incident si
 join event e on e.description = si.name
 join system s on s.name = si.source;
-
--- Такой запрос (дозапись) выполняется очень долго (((
-/*
-insert into incident
-select
-    si.id,
-    e.id,
-    s.id,
-    si.date_ext_created,
-    si.date_completed,
-    si.date_ext_completed,
-    si.unom
-from stg_incident si
-join event e on e.description = si.name
-join system s on s.name = si.source
-where si.date_completed  not in (select date_completed  from incident)
-
- */
 
 commit;
