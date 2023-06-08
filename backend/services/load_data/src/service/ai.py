@@ -12,7 +12,7 @@ class Prediction:
         self.id = id
         self.fields = fields
         self.redis = redis.StrictRedis(host=os.environ.get('REDIS_HOST'), port=int(os.environ.get('REDIS_PORT')), db=0)
-        self.engine = create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
+        self.engine = create_engine(f'postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}', isolation_level='AUTOCOMMIT')
 
     def get_prediction(self, build_ids: list) -> list:
         """ Получить рекомендацию """
