@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import {sortArr} from "../utils/sortArr";
 import {toggle} from "../utils/toggle";
+import {sortArrofObjByTime} from "../utils/sortArrofObjByTime";
 
 // Хук для сортировки массива объектов в порядке возрастания / убывания
 export const useSortFilter = (data) => {
@@ -10,7 +11,12 @@ export const useSortFilter = (data) => {
 
     useEffect(() => setSortedData(data), [data])
 
-    const sort = (key, sortOrderBy) => {
+    const sort = (key, sortOrderBy, isData) => {
+        if (isData) {
+            setSortedData(sortArrofObjByTime(sortedData, key, sortOrderBy, true))
+            return
+        }
+
         setSortedData(sortArr(sortedData, key, sortOrderBy, true))
     }
 

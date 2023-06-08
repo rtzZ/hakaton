@@ -1,12 +1,12 @@
 import * as yup from "yup";
-import {useEffect, useState} from "react";
+import {useDeferredValue, useEffect, useState} from "react";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useForm} from "react-hook-form";
 
-import {Box} from "@mui/material";
+import {Box, Modal} from "@mui/material";
 
 import {TransferList} from "../../../features/transferList";
-import {LoadingPage, ModalLoading} from "../../../entities/loading";
+import {LoadingPage} from "../../../entities/loading";
 import {SubmitButton} from "../../../shared/button";
 import {PageWrapper} from "../../../features/pageWrapper"
 import {PaperLayout} from "../../../shared/layout";
@@ -49,6 +49,7 @@ export const Admin = () => {
             setTimeout(() => setErrorValidation(''), 2000)
         }
     }, [errorValidation])
+
 
     useEffect(() => {
         if (learnError) {
@@ -109,7 +110,6 @@ export const Admin = () => {
     return (
         <PageWrapper>
             <PaperLayout>
-                {isLoadingLearn && <ModalLoading/>}
                 {isSuccessLearnFetch && <SideAlert severity='success'>Модель успешно обучена</SideAlert>}
                 {errorValidation && <SideAlert severity='error'>{errorValidation}</SideAlert>}
                 {learnError && <SideAlert severity='error'>Не удалось обучить модел</SideAlert>}

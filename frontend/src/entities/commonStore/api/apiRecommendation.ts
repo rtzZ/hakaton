@@ -23,7 +23,7 @@ const apiRecommendation = apiBase.injectEndpoints({
                 url: `${URL_LOAD_DATA}/buildings?build_id=${id}`,
                 ...getApiReqOptions(),
             }),
-            transformResponse: (response: any) => response.buildings[0].build,
+            transformResponse: (response: any) => response.buildings[0],
             transformErrorResponse: apiHandleErrorResponse,
         }),
         getObjectRecommendations: build.query<any, any>({

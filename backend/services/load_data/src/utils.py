@@ -36,10 +36,6 @@ async def search_buildigs(building_filter: BuildingFilter, session: AsyncSession
         model_info = await get_model_id(session=session)
         prediction = Prediction(id=str(model_info.id), fields=model_info.facts)
 
-        ####
-        # unoms = [build.unom for build in buildings]
-        ####
-
         buildings_with_rec = []
         for build in buildings:
             fields = int(prediction.get_prediction([build.unom]))

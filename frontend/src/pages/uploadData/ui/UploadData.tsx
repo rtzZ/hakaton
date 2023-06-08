@@ -57,7 +57,24 @@ export const UploadData = () => {
             <PaperLayout>
                 {isLoadingFile && <ModalLoading/>}
                 {uploadError && <SideAlert severity='error'>Не удалось отправить файл</SideAlert>}
+                <Stepper
+                    sx={{my: '20px'}}
+                    alternativeLabel
+                    activeStep={getActiveStep()}>
+                    {
+                        Object.values(steps).map((step, index) => (
+                            <Step key={step}>
+                                <StepLabel>
+                                    {step}
+                                </StepLabel>
+                            </Step>
+                        ))}
+                </Stepper>
+                <SubmitButton onClick={sendFile} disabled={isLoadingFile || status?.stage || !fileAttached}>
+                    Отправить файл
+                </SubmitButton>
                 <Button
+                    sx={{mt: '20px'}}
                     variant="outlined"
                     component="label"
                     fullWidth
@@ -72,22 +89,6 @@ export const UploadData = () => {
                         hidden
                     />
                 </Button>
-                <SubmitButton sx={{mt: '20px'}} onClick={sendFile} disabled={isLoadingFile || status?.stage || !fileAttached}>
-                    Отправить файл
-                </SubmitButton>
-                <Stepper
-                    sx={{mt: '60px'}}
-                    alternativeLabel
-                    activeStep={getActiveStep()}>
-                    {
-                        Object.values(steps).map((step, index) => (
-                            <Step key={step}>
-                                <StepLabel>
-                                    {step}
-                                </StepLabel>
-                            </Step>
-                        ))}
-                </Stepper>
             </PaperLayout>
         </PageWrapper>
     )

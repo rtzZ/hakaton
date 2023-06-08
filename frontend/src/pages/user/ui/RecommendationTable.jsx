@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 
 import {
     Button,
+    Checkbox,
     TableBody,
     TableCell,
     TablePagination,
@@ -56,7 +57,8 @@ export const RecommendationTable = ({recommendation, file_id}) => {
                     getPageContent(filteredRecommendation).map((row, i) => {
                         return (
                             <FocusedTableRow key={i} onClick={() => onFlatPage(row.unom)}>
-                                <TableCell align='left' >{row.address}</TableCell>
+                                <TableCell align='left' onClick={(e) => e.stopPropagation()} ><Checkbox/></TableCell>
+                                <TableCell align='left'>{row.address}</TableCell>
                                 <TableCell align='left'>{row.recommendation}</TableCell>
                                 <TableCell align='center'>{row.col_756}</TableCell>
                                 <TableCell align='center'>{row.col_761}</TableCell>
@@ -100,8 +102,9 @@ export const RecommendationTable = ({recommendation, file_id}) => {
                                     Скачать Excel
                                 </Button>
                             </TableFilter.SearchBanner>
+                            <TableFilter.Cell topic='' align='left' sx={{width: '3%'}}/>
                             <TableFilter.Cell topic='Адрес' align='left' sx={{width: '20%'}}/>
-                            <TableFilter.SelectCell topic='Рекомендуемый вид работы' keyName='recommendation' align='left' sx={{width: '30%'}}/>
+                            <TableFilter.SelectCell topic='Рекомендуемый вид работы' keyName='recommendation' align='left' sx={{width: '27%'}}/>
                             <TableFilter.SelectCell topic='Год постройки' keyName='col_756' align='center' sx={{width: '10%'}}/>
                             <TableFilter.SortCell topic='Количество квартир' keyName='col_761' align='center' sx={{width: '10%'}}/>
                             <TableFilter.SelectCell topic='Количество подъездов' keyName='col_760' align='center' sx={{width: '10%'}}/>

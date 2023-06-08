@@ -23,7 +23,7 @@ const SearchBanner =
         }, [defferFilterValue])
 
         return (
-            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: '10px'}}>
                 <Tooltip title={tooltipTitle} placement={tooltipPlacement}>
                     <TextField
                         size='small'
