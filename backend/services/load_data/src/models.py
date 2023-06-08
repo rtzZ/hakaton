@@ -17,6 +17,7 @@ class Building(BaseModel):
     d = Column(String, nullable=True)
     k = Column(String, nullable=True)
     s = Column(String, nullable=True)
+    soor = Column(String, nullable=True)
 
     col_781 = Column(String, nullable=True)
     col_772 = Column(Integer, nullable=True)
@@ -60,3 +61,19 @@ class LearningModel(BaseModel):
     facts = Column(String, nullable=True)
     is_selected = Column(Boolean, nullable=True, default=False)
     created = Column(DateTime(timezone=True), server_default=func.now())
+
+class AddressPos(BaseModel):
+
+    __tablename__ = "address"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    address = Column(String, nullable=True)
+    soor = Column(String, nullable=True)
+
+
+class Event(BaseModel):
+
+    __tablename__ = "event"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    description = Column(String, nullable=True)

@@ -1,7 +1,7 @@
-import {useState, useEffect} from "react";
+import {useState} from "react";
 
 import {PageWrapper} from "../../../features/pageWrapper"
-import {Button, Grid, Step, StepLabel, Stepper} from "@mui/material";
+import {Button, Step, StepLabel, Stepper} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import AddIcon from "@mui/icons-material/Add";
 

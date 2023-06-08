@@ -1,16 +1,15 @@
-import * as yup from "yup";
 import dayjs from "dayjs";
 import {useDispatch, useSelector} from "react-redux";
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup";
 
-import {Box, Grid, MenuItem} from "@mui/material";
+import {Autocomplete, Box, Button, ButtonGroup, Grid, MenuItem, TextField, Typography} from "@mui/material";
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import {
-    objectsSelector, setObjects,
+    fileIdSelector,
+    objectsSelector, resultViewSelector, setFileId, setObjects, setResultView, useGetAddressQuery,
     useGetAllObjectsQuery,
     useGetLearningModelsQuery,
     useSetLearningModelsMutation
@@ -20,20 +19,19 @@ import {SideAlert} from "../../../shared/sideAlert";
 import {PaperLayout} from "../../../shared/layout";
 import {SubmitButton} from "../../../shared/button";
 import {PageWrapper} from "../../../features/pageWrapper";
-import {SelectInput, TextInput} from "../../../features/controlledInput";
+import {SelectInput} from "../../../features/controlledInput";
 import {SuggestInput} from "../../../features/suggestInput";
 import {accidentBuildOpt} from "../const/accidentBuildOpt";
 import {RecommendationTable} from "./RecommendationTable";
 import {ModalLoading} from "../../../entities/loading";
 import {FocusedTypography} from "../../../shared/typography";
-
-const validationSchema = yup.object({name: yup.string().required('Обязательное поле'),})
-
-type FormData = yup.InferType<typeof validationSchema>
-
+import {RecommendationMap} from "./RecommendationMap";
+import {InputText} from "../../../entities/inputText";
 
 // Формирование значений для фильтров
 const years: string[] = []
+const corpuses: string[] = []
+const houses: string[] = []
 
 let year = +dayjs().format('YYYY')
 for (year; year >= 1600; year--) {
@@ -43,9 +41,15 @@ for (year; year >= 1600; year--) {
 const hallCountOpt: string[] = []
 const flatCountOpt: string[] = []
 
-for (let i = 1; i < 200; i++) {
+for (let i = 1; i < 1000; i++) {
     if (i < 18) {
         hallCountOpt.push(`${i}`)
+    }
+    if (i <= 50) {
+        corpuses.push(`${i}`)
+    }
+    if (i <= 200) {
+        houses.push(`${i}`)
     }
     flatCountOpt.push(`${i}`)
 }
@@ -55,13 +59,21 @@ for (let i = 1; i < 200; i++) {
 export const User = () => {
     const dispatch = useDispatch()
     const previousAllObjects = useSelector(objectsSelector) // получем предыдущие значения рекомендаций, используется если еще не получались новые рекомендации
+    const previousFileId = useSelector(fileIdSelector)
+    const previousResultView = useSelector(resultViewSelector)
 
-    const {data: models, isSuccess: isSuccessModels, error: getModels} = useGetLearningModelsQuery() // получение модели
+    const {data: models, isSuccess: isSuccessModels, error: getModelsError} = useGetLearningModelsQuery() // получение модели
     const [sendSelectedModel, {error: sendModelError}] = useSetLearningModelsMutation() // отправление выбранной модели
+
+    const {data: suggestAddresses, error: suggestError} = useGetAddressQuery()
 
     const [build_year, setBuild_year] = useState<string[]>([])
     const [hall_count, setHall_count] = useState<string[]>([])
+    const [house_number, setHouse_number] = useState<string[]>([])
+    const [corpus_number, setCorpus_number] = useState<string[]>([])
     const [flat_count, setFlat_count] = useState<string[]>([])
+    const [address, setAddress] = useState<string | null>('')
+    const addressRef = useRef()
 
     const [queryParam, setQueryParams] = useState<{ [x: string]: any }>({});
     const [isSubmit, setIsSubmit] = useState<boolean>(false)
@@ -80,9 +92,7 @@ export const User = () => {
 
 
     const {control, setValue, handleSubmit, watch, formState: {errors}} = useForm({
-        resolver: yupResolver(validationSchema),
         defaultValues: {
-            name: '',
             lift_count: '',
             accident_id: '',
             model: ''
@@ -90,6 +100,21 @@ export const User = () => {
     });
 
     const selectedModelId = watch('model')
+
+    const uniqSuggestAddress = useMemo(() => {
+        const uniqAddress: any = {}
+
+        if (suggestAddresses) {
+            suggestAddresses.forEach((address: string) => {
+                const splittedAddress = address.split(' ')[0]
+                if (splittedAddress in uniqAddress)
+                    return
+                uniqAddress[splittedAddress] = true
+            })
+        }
+
+        return Object.keys(uniqAddress)
+    }, [suggestAddresses])
 
     useEffect(() => {
         if (selectedModelId) {
@@ -99,7 +124,7 @@ export const User = () => {
 
     useEffect(() => {
         if (isSuccessRecommendation) {
-            const normalizedData = recommendation.map((recommendation: any) => {
+            const normalizedData = recommendation.buildings.map((recommendation: any) => {
                 const normalizeRecommend = JSON.parse(JSON.stringify(recommendation?.build))
 
                 normalizeRecommend.recommendation = recommendation.recommendation.name
@@ -107,6 +132,7 @@ export const User = () => {
                 return normalizeRecommend
             })
 
+            dispatch(setFileId(recommendation.file_id))
             dispatch(setObjects(normalizedData))
             setNormalizeRecommendation(normalizedData)
         }
@@ -122,8 +148,20 @@ export const User = () => {
         }
     }, [isSuccessModels, sendModelError, setValue, models])
 
+    useEffect(() => {
+        if (isSubmit) {
+            fetchRecommendation()
+        }
+    }, [queryParam, isSubmit])
+
     // Формируем данные для запроса при сабмите формы
-    const onSubmit = (queries: FormData) => {
+    const onSubmit = (queries: any) => {
+        if (!address) {
+            // @ts-ignore
+            addressRef?.current?.focus()
+            return
+        }
+
         setIsSubmit(true)
         setIsFetchRecommendation(true)
 
@@ -133,6 +171,9 @@ export const User = () => {
         setQueryParams(
             {
                 ...copyQueries,
+                name: address,
+                house_number: house_number.join(','),
+                corpus_number: corpus_number.join(','),
                 build_year: build_year.join(','),
                 hall_count: hall_count.join(','),
                 flat_count: flat_count.join(',')
@@ -140,29 +181,54 @@ export const User = () => {
         )
     }
 
-    useEffect(() => {
-        if (isSubmit) {
-            fetchRecommendation()
-        }
-    }, [queryParam, isSubmit])
+    const onChangeResultView = (e: any) => {
+        dispatch(setResultView(e.target.name))
+    }
 
+    const getResultView = () => {
+        if (!previousResultView || (!previousAllObjects.length && !normalizeRecommendation))
+            return null
+
+        return (
+            previousResultView == 'map'
+                ? <RecommendationMap recommendation={normalizeRecommendation || previousAllObjects}/>
+                : <RecommendationTable
+                    recommendation={normalizeRecommendation || previousAllObjects}
+                    file_id={recommendation?.file_id || previousFileId}
+                />
+        )
+    }
 
     return (
         <PageWrapper>
-            {getModels && <SideAlert severity='error'>Не удалось загрузить модели</SideAlert>}
+            {suggestError && <SideAlert severity='error'>Не удалось загрузить рекомендации адресов</SideAlert>}
+            {getModelsError && <SideAlert severity='error'>Не удалось загрузить модели</SideAlert>}
             {sendModelError && <SideAlert severity='error'>Не удалось выбрать модель</SideAlert>}
             {errorRecommendation && <SideAlert severity='error'>Не удалось загрузить рекомендации</SideAlert>}
-            {!isSuccessModels ? null : models.length ? null : <SideAlert severity='error'>Нет активных моделей</SideAlert>}
+            {!isSuccessModels ? null : models.length ? null :
+                <SideAlert severity='error'>Нет активных моделей</SideAlert>}
             {isFetchingRecommendation && <ModalLoading/>}
             <PaperLayout elevation={3}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <Grid container spacing='20px'>
                         <Grid item xl={6} lg={6} xs={12} sm={12} md={12}>
-                            <TextInput
-                                errors={errors}
-                                control={control}
-                                label='Адрес'
-                                name='name'
+                            <Autocomplete
+                                disablePortal
+                                options={uniqSuggestAddress}
+                                onChange={(e, val) => setAddress(val)}
+                                renderInput={(params) => (
+                                    <>
+                                        <InputText
+                                            label='Адрес'
+                                        />
+                                        <TextField
+                                            {...params}
+                                            inputRef={addressRef}
+                                            size='small'
+                                            name='name'
+                                        />
+                                    </>
+                                )}
                             />
                         </Grid>
                         {
@@ -189,6 +255,20 @@ export const User = () => {
                                 </SelectInput>
                             </Grid>
                         }
+                        <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
+                            <SuggestInput
+                                data={houses}
+                                onSave={setHouse_number}
+                                label='Номер дома'
+                            />
+                        </Grid>
+                        <Grid item xl={6} lg={6} xs={6} sm={6} md={6}>
+                            <SuggestInput
+                                data={corpuses}
+                                onSave={setCorpus_number}
+                                label='Номер корпуса'
+                            />
+                        </Grid>
                         <Grid item xl={12} lg={12} xs={12} sm={12} md={12}>
                             <SuggestInput
                                 data={years}
@@ -271,8 +351,26 @@ export const User = () => {
             </PaperLayout>
             {
                 (previousAllObjects.length || normalizeRecommendation) // отрисовывем рекомендации если только есть данные
-                && <RecommendationTable recommendation={normalizeRecommendation || previousAllObjects}/>
+                && <Box sx={{
+                    mt: '40px',
+                    mb: '60px',
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexDirection: 'column'
+                }}>
+                    <Typography sx={{fontWeight: 500, fontSize: '1.2rem'}}>
+                        Вид отображения результата
+                    </Typography>
+                    <ButtonGroup sx={{mt: '20px'}}>
+                        <Button variant={previousResultView == 'map' ? "outlined" : "contained"} name='map'
+                                sx={{width: "200px"}} onClick={onChangeResultView}>Карта</Button>
+                        <Button variant={previousResultView == 'table' ? "outlined" : "contained"} name='table'
+                                sx={{width: "200px"}} onClick={onChangeResultView}>Таблица</Button>
+                    </ButtonGroup>
+                </Box>
             }
+            {getResultView()}
         </PageWrapper>
     )
 }

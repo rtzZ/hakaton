@@ -4,12 +4,15 @@ export {useUploadDataMutation, useGetStatusUploadQuery} from './api/apiUploadDat
 export {
     useGetObjectInfoQuery,
     useGetAllObjectsQuery,
+    useGetAddressQuery,
     useGetObjectRecommendationsQuery,
     useGetLearningModelsQuery,
     useSetLearningModelsMutation
 } from './api/apiRecommendation'
 
-export {setObjects} from './lastObjectsStore/actions';
-export {objectsSelector} from './lastObjectsStore/selector';
+export {setObjects, setFileId, setResultView} from './lastObjectsStore/actions';
+export {objectsSelector, fileIdSelector, resultViewSelector} from './lastObjectsStore/selector';
+
+export {downloadExcel} from './utils/downloadExcel';
 
 export {store} from './store/store'

@@ -14,7 +14,8 @@ import {SideAlert} from "../../../shared/sideAlert";
 import {TextInput} from "../../../features/controlledInput";
 import {renameArr} from "../utils/renameArr";
 import {learningFieldsToApi, learningFieldsToUI} from "../consts/learningFieldsToUI";
-
+import {LearningStepper} from "./LearningStepper";
+import {steps} from "../consts/steps";
 
 import {
     useGetLearnFieldsQuery,
@@ -22,12 +23,16 @@ import {
 } from "../../../entities/commonStore/api/apiConfigureModel";
 
 
+
 const validationSchema = yup.object({name: yup.string().required('Обязательное поле'),})
 
 type FormData = yup.InferType<typeof validationSchema>
 
+const timer = (ms: any) => new Promise(res => setTimeout(res, ms))
+
 // Страница Обучения модели
 export const Admin = () => {
+    const [activeStep, setActiveStep] = useState<number>(-1)
     const [choosenFields, setChosenFields] = useState<readonly string[]>([]);
     const [errorValidation, setErrorValidation] = useState<string>('')
 
@@ -45,17 +50,41 @@ export const Admin = () => {
         }
     }, [errorValidation])
 
+    useEffect(() => {
+        if (learnError) {
+            setActiveStep(-1)
+        }
+    }, [learnError, setActiveStep])
+
     useEffect(() => { // сброс имени модели
         if (isSuccessLearnFetch) {
             reset()
         }
     }, [isSuccessLearnFetch])
 
+    const  startChangeSteps = async () => {
+        const stepsIndex = []
+
+        Object.keys(steps).map((steps, index) => stepsIndex.push(index + 1))
+        stepsIndex.push(-1)
+
+        setActiveStep(0)
+        for (let step of stepsIndex) {
+            await timer(2000)
+
+            if (!learnError) {
+                setActiveStep(step)
+            }
+        }
+    }
+
     const onSubmit = (data: FormData) => {
         if (!choosenFields.length) {
             setErrorValidation('Не выбраны признаки обучения модели')
             return
         }
+
+        startChangeSteps()
 
         learnFetch({fields: renameArr(learningFieldsToApi, choosenFields), name: data.name})
     }
@@ -109,6 +138,10 @@ export const Admin = () => {
                         </SubmitButton>
                     </Box>
                 </form>
+                <LearningStepper
+                    error={learnError}
+                    activeStep={activeStep}
+                />
             </PaperLayout>
         </PageWrapper>
     )

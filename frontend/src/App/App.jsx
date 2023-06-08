@@ -8,6 +8,7 @@ import Box from "@mui/material/Box"
 import router from './router'
 import {store} from "../entities/commonStore";
 import ErrorBoundary from "./ErrorBoundary";
+import {YMaps} from "@pbe/react-yandex-maps";
 
 const theme = createTheme({
     typography: {
@@ -31,13 +32,15 @@ const theme = createTheme({
 function App() {
   return (
       <ErrorBoundary>
-          <Provider store={store}>
-              <Box>
-                  <ThemeProvider theme={theme}>
-                      <RouterProvider router={router}/>
-                  </ThemeProvider>
-              </Box>
-          </Provider>
+          <YMaps>
+              <Provider store={store}>
+                  <Box>
+                      <ThemeProvider theme={theme}>
+                          <RouterProvider router={router}/>
+                      </ThemeProvider>
+                  </Box>
+              </Provider>
+          </YMaps>
       </ErrorBoundary>
   );
 }

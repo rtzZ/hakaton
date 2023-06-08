@@ -1,5 +1,7 @@
 import {lastObjectsActions} from './slice'
 
 export const {
-    setObjects
+    setObjects,
+    setFileId,
+    setResultView
 } = lastObjectsActions

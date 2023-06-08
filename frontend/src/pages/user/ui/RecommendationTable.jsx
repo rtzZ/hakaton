@@ -2,22 +2,22 @@ import {useCallback, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 
 import {
-    Table,
+    Button,
     TableBody,
     TableCell,
-    TableContainer,
-    TableHead,
     TablePagination,
-    TableRow,
     Typography
 } from "@mui/material";
 
 import {PaperLayout} from "../../../shared/layout";
 import {TableFilter, usePagination} from "../../../features/tableFilter";
 import {FocusedTableRow} from "../../../shared/focusedTableRow";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import {downloadExcel} from "../../../entities/commonStore";
+import {URL_LOAD_DATA} from "../../../entities/commonStore/api/apiBase";
+import dayjs from "dayjs";
 
-
-export const RecommendationTable = ({recommendation}) => {
+export const RecommendationTable = ({recommendation, file_id}) => {
     const navigate = useNavigate()
 
     const [filteredRecommendation, setFilteredRecommendation] = useState(recommendation)
@@ -31,8 +31,12 @@ export const RecommendationTable = ({recommendation}) => {
         setFilteredRecommendation(recommendation)
     }, [recommendation])
 
-    const onFlatPage = (id: number) => {
+    const onFlatPage = (id) => {
         navigate(`/recommendation/${id}`)
+    }
+
+    const onDownloadExcel = () => {
+        downloadExcel(`${URL_LOAD_DATA}/download-report?file_id=${file_id}`, dayjs().format('YYYY-MM-DDTHH:mm'))
     }
 
     const filterBySearch = useCallback((data, searchFilter) => {
@@ -43,7 +47,7 @@ export const RecommendationTable = ({recommendation}) => {
 
             return address.includes(filterLowerCase)
         })
-    })
+    }, [])
 
     const getTableBody = () => {
         return (
@@ -84,7 +88,18 @@ export const RecommendationTable = ({recommendation}) => {
                                 tooltipTitle='Поиск осуществляется по адресу'
                                 tooltipPlacement='top'
                                 findIntersection={filterBySearch}
-                            />
+                            >
+                                <Button
+                                    variant="outlined"
+                                    fullWidth
+                                    color='primary'
+                                    disabled={!file_id}
+                                    onClick={onDownloadExcel}
+                                    startIcon={<FileDownloadIcon/>}
+                                >
+                                    Скачать Excel
+                                </Button>
+                            </TableFilter.SearchBanner>
                             <TableFilter.Cell topic='Адрес' align='left' sx={{width: '20%'}}/>
                             <TableFilter.SelectCell topic='Рекомендуемый вид работы' keyName='recommendation' align='left' sx={{width: '30%'}}/>
                             <TableFilter.SelectCell topic='Год постройки' keyName='col_756' align='center' sx={{width: '10%'}}/>

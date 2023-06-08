@@ -23,7 +23,7 @@ const apiRecommendation = apiBase.injectEndpoints({
                 url: `${URL_LOAD_DATA}/buildings?build_id=${id}`,
                 ...getApiReqOptions(),
             }),
-            transformResponse: (response: any) => response[0].build,
+            transformResponse: (response: any) => response.buildings[0].build,
             transformErrorResponse: apiHandleErrorResponse,
         }),
         getObjectRecommendations: build.query<any, any>({
@@ -31,6 +31,14 @@ const apiRecommendation = apiBase.injectEndpoints({
                 url: `${URL_LOAD_DATA}/recommendation?building_ids=${id}`,
                 ...getApiReqOptions(),
             }),
+            transformErrorResponse: apiHandleErrorResponse,
+        }),
+        getAddress: build.query<any, void>({
+            query: () => ({
+                url: `${URL_LOAD_DATA}/adresses`,
+                ...getApiReqOptions(),
+            }),
+            transformResponse: (response: any) => response,
             transformErrorResponse: apiHandleErrorResponse,
         }),
         getAllObjects: build.query<any, any>({
@@ -51,6 +59,7 @@ const apiRecommendation = apiBase.injectEndpoints({
         setLearningModels: build.mutation<any, string>({
             query: (id) => ({
                 url: `${URL_LOAD_DATA}/learning_models?id=${id}`,
+                method: 'POST',
                 ...getApiReqOptions(),
             }),
             transformErrorResponse: apiHandleErrorResponse,
@@ -61,6 +70,7 @@ const apiRecommendation = apiBase.injectEndpoints({
 
 export const {
     useGetObjectInfoQuery,
+    useGetAddressQuery,
     useGetAllObjectsQuery,
     useGetObjectRecommendationsQuery,
     useGetLearningModelsQuery,
