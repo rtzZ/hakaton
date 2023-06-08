@@ -60,6 +60,7 @@ export const RecommendationMap = ({recommendation}) => {
                                 }}
                                 objects={{
                                     openBalloonOnClick: true,
+                                    // hintContentLayout: ymaps.templateLayoutFactory.createClass('{{properties.hintContent}}')
                                 }}
                                 defaultFeatures={features}
                                 modules={["objectManager.addon.objectsBalloon"]}
