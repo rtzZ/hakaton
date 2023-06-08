@@ -133,14 +133,14 @@ def load(files_io: dict):
 def _load_model_etl():
     """ Загрузка модули данных"""
     print(f'Start update model')
-    sql_text = 'SELECT * FROM public.model_test_asv_prefinal'
+    sql_text = 'SELECT * FROM public.for_model_prefinal'
     data = pd.read_sql_query(sql=text(sql_text), con=e.connect())
     data = data.fillna(value=-1)
     for column in data.columns:
         data[column] = pd.to_numeric(data[column], errors='coerce')
     data.loc[data['col_754'] != -1, 'col_754'] = 0
     data = data.loc[:, (data != data.iloc[0]).any()]
-    data.to_sql(name='for_model', if_exists='append', con=e, index=False)
+    data.to_sql(name='for_model', if_exists='replace', con=e, index=False)
     print(f'Success update model')
 
 
