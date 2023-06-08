@@ -7,7 +7,7 @@ from openpyxl import writer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.filters import BuildingFilter
-from src.models import Building, Recommendation, LearningModel, AddressPos, Event
+from src.models import Building, Recommendation, LearningModel, AddressPos, Event, Incident
 from src.service.ai import Prediction
 import pandas as pd
 import io
@@ -36,12 +36,20 @@ async def search_buildigs(building_filter: BuildingFilter, session: AsyncSession
         model_info = await get_model_id(session=session)
         prediction = Prediction(id=str(model_info.id), fields=model_info.facts)
 
+        ####
+        # unoms = [build.unom for build in buildings]
+        ####
+
         buildings_with_rec = []
         for build in buildings:
             fields = int(prediction.get_prediction([build.unom]))
             query = select(Recommendation).filter(Recommendation.id.in_([fields]))
             recommendations = (await session.execute(query)).scalar()
-            buildings_with_rec.append({'build': build, 'recommendation': recommendations})
+
+            query = select(Incident).where(Incident.unom == build.unom)
+            incidents = (await session.execute(query)).scalars().all()
+
+            buildings_with_rec.append({'build': build, 'recommendation': recommendations, 'incidents': incidents})
 
         # return buildings_with_rec, file_id
     finally:
@@ -74,6 +82,7 @@ async def search_buildigs(building_filter: BuildingFilter, session: AsyncSession
             redis.set(file_id, pickle.dumps(df))
         return buildings_with_rec, file_id
 
+
 async def get_excel_file(file_id: str):
     redis = red.StrictRedis(host=os.environ.get('REDIS_HOST'), port=int(os.environ.get('REDIS_PORT')), db=0)
     df = pickle.loads(redis.get(file_id))
@@ -92,6 +101,7 @@ async def get_excel_file(file_id: str):
     writer.close()
     excel_bytes.seek(0)
     return excel_bytes
+
 
 async def get_addresses(session: AsyncSession):
     addresses = []
@@ -135,6 +145,7 @@ async def set_coordinates(api_keys: list[str], country: str, city: str, session:
         await session.commit()
     finally:
         return full_addresses
+
 
 def get_coordinates(country: str, city: str, address: str, api_key: str):
     pos = None

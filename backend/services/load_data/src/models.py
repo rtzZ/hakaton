@@ -77,3 +77,17 @@ class Event(BaseModel):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     description = Column(String, nullable=True)
+
+class Incident(BaseModel):
+
+    __tablename__ = "stg_incident"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=True)
+    source = Column(String, nullable=True)
+    date_ext_created = Column(String, nullable=True) # из внешней системе
+    date_completed = Column(String, nullable=True)
+    district = Column(String, nullable=True)
+    address = Column(String, nullable=True)
+    unom = Column(String, nullable=True)
+    date_ext_completed = Column(String, nullable=True) # дата завершения во внешней системе

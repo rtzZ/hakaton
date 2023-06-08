@@ -363,10 +363,10 @@ export const User = () => {
                         Вид отображения результата
                     </Typography>
                     <ButtonGroup sx={{mt: '20px'}}>
-                        <Button variant={previousResultView == 'map' ? "outlined" : "contained"} name='map'
-                                sx={{width: "200px"}} onClick={onChangeResultView}>Карта</Button>
-                        <Button variant={previousResultView == 'table' ? "outlined" : "contained"} name='table'
+                        <Button variant={previousResultView == 'table' ? "contained" : "outlined"} name='table'
                                 sx={{width: "200px"}} onClick={onChangeResultView}>Таблица</Button>
+                        <Button variant={previousResultView == 'map' ? "contained" : "outlined"} name='map'
+                                sx={{width: "200px"}} onClick={onChangeResultView}>Карта</Button>
                     </ButtonGroup>
                 </Box>
             }
