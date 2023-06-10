@@ -131,6 +131,10 @@ export const Admin = () => {
                             right={choosenFields}
                             setRight={setChosenFields}
                         />
+                        <LearningStepper
+                            error={learnError}
+                            activeStep={activeStep}
+                        />
                         <SubmitButton
                             sx={{mt: '20px'}}
                             disabled={isLoadingLearn}>
@@ -138,10 +142,6 @@ export const Admin = () => {
                         </SubmitButton>
                     </Box>
                 </form>
-                <LearningStepper
-                    error={learnError}
-                    activeStep={activeStep}
-                />
             </PaperLayout>
         </PageWrapper>
     )

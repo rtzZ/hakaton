@@ -12,8 +12,11 @@ import {steps} from "../const/steps";
 import {SideAlert} from "../../../shared/sideAlert";
 import {ModalLoading} from "../../../entities/loading";
 
+const timer = (ms: any) => new Promise(res => setTimeout(res, ms))
+
 // Страница загрузки данных для модели
 export const UploadData = () => {
+    const [activeStep, setActiveStep] = useState<number>(-2)
     const [fileAttached, setFileAttached] = useState<boolean>(false)
     const [file, setFile] = useState<any>(null)
     const [fileName, setFileName] = useState<string>('')
@@ -23,9 +26,9 @@ export const UploadData = () => {
         isLoading: isLoadingFile
     }] = useUploadDataMutation() // хук для отправки файла
 
-    const {data: status, isLoading, error} = useGetStatusUploadQuery('', {
-        pollingInterval: 3000
-    }) // хук для получения статуса отправки файла, пингуется по времени
+    // const {data: status, isLoading, error} = useGetStatusUploadQuery('', {
+    //     pollingInterval: 3000
+    // }) // хук для получения статуса отправки файла, пингуется по времени
 
     // Преобразование прикрепленного файла и его отправка
     const onUploadFile = (files: any) => {
@@ -40,15 +43,29 @@ export const UploadData = () => {
     }
 
     // Получение индекса активного шага для степпера
-    const getActiveStep = () => {
-        const stage = status?.stage
-        const step = Object.keys(steps).findIndex(el => el === stage)
+    // const getActiveStep = () => {
+    //     const stage = status?.stage
+    //     const step = Object.keys(steps).findIndex(el => el === stage)
+    //
+    //     return ~step ? step + 1 : -1;
+    // }
 
-        return ~step ? step + 1 : -1;
+    const  startChangeSteps = async () => {
+        const stepsIndex = []
+
+        Object.keys(steps).map((steps, index) => stepsIndex.push(index + 1))
+        stepsIndex.push(-1)
+
+        setActiveStep(0)
+        for (let step of stepsIndex) {
+            await timer(3000)
+            setActiveStep(step)
+        }
     }
 
     // отправка файла
     const sendFile = () => {
+        startChangeSteps()
         uploadFile(file)
     }
 
@@ -60,7 +77,8 @@ export const UploadData = () => {
                 <Stepper
                     sx={{my: '20px'}}
                     alternativeLabel
-                    activeStep={getActiveStep()}>
+                    activeStep={activeStep}
+                    >
                     {
                         Object.values(steps).map((step, index) => (
                             <Step key={step}>
@@ -70,7 +88,10 @@ export const UploadData = () => {
                             </Step>
                         ))}
                 </Stepper>
-                <SubmitButton onClick={sendFile} disabled={isLoadingFile || status?.stage || !fileAttached}>
+                {/*<SubmitButton onClick={sendFile} disabled={isLoadingFile || status?.stage || !fileAttached}>*/}
+                {/*    Отправить файл*/}
+                {/*</SubmitButton>*/}
+                <SubmitButton onClick={sendFile} disabled={isLoadingFile || !fileAttached || (activeStep !==-1 && activeStep !== -2)}>
                     Отправить файл
                 </SubmitButton>
                 <Button
