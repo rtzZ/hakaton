@@ -17,12 +17,12 @@ services:
       context: ./backend/services/auth
     restart: always
     command: >
-      sh -c "pipenv run python3 utils/wait_for_db.py &&
-             pipenv run python3 utils/init_db.py &&
+      sh -c "pipenv run python3 common/utils/wait_for_db.py &&
+             pipenv run python3 common/utils/init_db.py &&
              pipenv run python3 run.py"
     volumes:
       - ./backend/services/auth:/app
-      - ./backend/services/utils:/app/utils
+      - ./backend/services/common:/app/common
     ports:
       - "2223:2223"
     env_file:
@@ -35,11 +35,11 @@ services:
       context: ./backend/services/learning
     restart: always
     command: >
-      sh -c "pipenv run python3 utils/wait_for_db.py &&
+      sh -c "pipenv run python3 common/utils/wait_for_db.py &&
              pipenv run python3 run.py"
     volumes:
       - ./backend/services/learning:/app
-      - ./backend/services/utils:/app/utils
+      - ./backend/services/common:/app/common
     ports:
       - "2225:2225"
     env_file:
@@ -48,17 +48,16 @@ services:
       - db
       - redis
 
-
   load_data:
     build:
       context: ./backend/services/load_data
     restart: always
     command: >
-      sh -c "pipenv run python3 utils/wait_for_db.py &&
+      sh -c "pipenv run python3 common/utils/wait_for_db.py &&
              pipenv run python3 run.py"
     volumes:
       - ./backend/services/load_data:/app
-      - ./backend/services/utils:/app/utils
+      - ./backend/services/common:/app/common
     ports:
       - "2224:2224"
     env_file:
@@ -66,17 +65,16 @@ services:
     depends_on:
       - db
 
-
   upload_data:
     build:
       context: ./backend/services/upload_data
     restart: always
     command: >
-      sh -c "pipenv run python3 utils/wait_for_db.py &&
+      sh -c "pipenv run python3 common/utils/wait_for_db.py &&
              pipenv run python3 run.py"
     volumes:
       - ./backend/services/upload_data:/app
-      - ./backend/services/utils:/app/utils
+      - ./backend/services/common:/app/common
     ports:
       - "2226:2226"
     env_file:
@@ -90,11 +88,11 @@ services:
       context: ./backend/services/upload_data
     restart: always
     command: >
-      sh -c "pipenv run python3 utils/wait_for_db.py &&
+      sh -c "pipenv run python3 common/utils/wait_for_db.py &&
              pipenv run rq worker default low high"
     volumes:
       - ./backend/services/upload_data:/app
-      - ./backend/services/utils:/app/utils
+      - ./backend/services/common:/app/common
     env_file:
       - ./.env
     depends_on:

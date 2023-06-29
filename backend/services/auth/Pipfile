@@ -1,0 +1,39 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+alembic = "*"
+anyio = "*"
+async-timeout = "*"
+asyncpg = "*"
+click = "*"
+dnspython = "*"
+email-validator = "*"
+fastapi = "*"
+greenlet = "*"
+h11 = "*"
+httptools = "*"
+idna = "*"
+mako = "*"
+markupsafe = "*"
+psycopg2 = "*"
+pydantic = "*"
+pyjwt = "*"
+python-dotenv = "*"
+pyyaml = "*"
+sniffio = "*"
+sqlalchemy = "*"
+starlette = "*"
+starlette-context = "*"
+typing-extensions = "*"
+uvicorn = "*"
+uvloop = "*"
+watchfiles = "*"
+websockets = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

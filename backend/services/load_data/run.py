@@ -1,7 +1,5 @@
-import os
-
-import uvicorn
-from settings.server import app
+from common.server import run
+from settings.config import APP_HOST, APP_PORT
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=os.environ.get('LOAD_APP_HOST'), port=int(os.environ.get('LOAD_APP_PORT')))
+    run(APP_HOST, APP_PORT)

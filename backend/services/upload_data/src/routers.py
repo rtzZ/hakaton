@@ -1,36 +1,43 @@
 import io
-import os
 
+from common.app_utils.auth import Authorization
+from common.config import REDIS_HOST, REDIS_PORT
 from fastapi import APIRouter, Depends, UploadFile
 from redis import Redis
-from rq import Queue, registry
+from rq import Queue
 from rq.job import Job
 from rq.registry import StartedJobRegistry
-
-from app_utils.auth import Authorization
 from src.tasks import upload_files
 
 router = APIRouter()
 
 
-@router.post("/upload", status_code=200, dependencies=[Depends(Authorization(role='admin'))])
+@router.post(
+    "/upload",
+    status_code=200,
+    dependencies=[Depends(Authorization(role="admin"))],
+)
 async def upload(file: UploadFile):
-    """ Загрузка Zip файла """
+    """Загрузка Zip файла"""
     contents = await file.read()
     bites = io.BytesIO(contents)
-    q = Queue(connection=Redis(host=os.environ.get('REDIS_HOST'), port=int(os.environ.get('REDIS_PORT'))))
+    q = Queue(connection=Redis(host=REDIS_HOST, port=int(REDIS_PORT)))
     job = q.enqueue(upload_files, bites, job_timeout=50000)
-    return {'id': job.id}
+    return {"id": job.id}
 
 
-@router.get("/upload_log", status_code=200, dependencies=[Depends(Authorization(role='admin'))])
+@router.get(
+    "/upload_log",
+    status_code=200,
+    dependencies=[Depends(Authorization(role="admin"))],
+)
 async def upload_log():
-    """ Возвращает статусы работы с файлом """
+    """Возвращает статусы работы с файлом"""
     running_job_ids = []
     meta = {}
     try:
-        redis = Redis(host=os.environ.get('REDIS_HOST'), port=int(os.environ.get('REDIS_PORT')))
-        registry = StartedJobRegistry('default', connection=redis)
+        redis = Redis(host=REDIS_HOST, port=int(REDIS_PORT))
+        registry = StartedJobRegistry("default", connection=redis)
         running_job_ids = registry.get_job_ids()
         for job_id in running_job_ids:
             job = Job.fetch(job_id, connection=redis)

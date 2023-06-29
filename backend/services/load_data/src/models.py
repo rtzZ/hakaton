@@ -1,13 +1,20 @@
-from sqlalchemy import Column, Integer, String, Boolean, BigInteger, ForeignKey, DateTime, Float, UUID, func, ARRAY
 import uuid
 
-from sqlalchemy.orm import relationship
-
-from app_utils.models import BaseModel, Base
+from common.app_utils.models import BaseModel
+from sqlalchemy import (
+    UUID,
+    Boolean,
+    Column,
+    DateTime,
+    Integer,
+    String,
+    func,
+)
 
 
 class Building(BaseModel):
-    """ Модель объекта """
+    """Модель объекта"""
+
     __tablename__ = "object_flat"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -38,7 +45,8 @@ class Building(BaseModel):
 
 
 class Recommendation(BaseModel):
-    """ Модель типов работ """
+    """Модель типов работ"""
+
     __tablename__ = "work_type"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -52,7 +60,8 @@ class Recommendation(BaseModel):
 
 
 class LearningModel(BaseModel):
-    """ Модель обучения """
+    """Модель обучения"""
+
     __tablename__ = "learning_model"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4())
@@ -62,8 +71,8 @@ class LearningModel(BaseModel):
     is_selected = Column(Boolean, nullable=True, default=False)
     created = Column(DateTime(timezone=True), server_default=func.now())
 
-class AddressPos(BaseModel):
 
+class AddressPos(BaseModel):
     __tablename__ = "address"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -72,22 +81,23 @@ class AddressPos(BaseModel):
 
 
 class Event(BaseModel):
-
     __tablename__ = "event"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     description = Column(String, nullable=True)
 
-class Incident(BaseModel):
 
+class Incident(BaseModel):
     __tablename__ = "stg_incident"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=True)
     source = Column(String, nullable=True)
-    date_ext_created = Column(String, nullable=True) # из внешней системе
+    date_ext_created = Column(String, nullable=True)  # из внешней системе
     date_completed = Column(String, nullable=True)
     district = Column(String, nullable=True)
     address = Column(String, nullable=True)
     unom = Column(String, nullable=True)
-    date_ext_completed = Column(String, nullable=True) # дата завершения во внешней системе
+    date_ext_completed = Column(
+        String, nullable=True
+    )  # дата завершения во внешней системе

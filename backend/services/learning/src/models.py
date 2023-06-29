@@ -1,16 +1,18 @@
-from typing import List
-
-from sqlalchemy import Column, Integer, String, Boolean, BigInteger, ForeignKey, DateTime, Float, UUID, func, ARRAY
 import uuid
 
-from sqlalchemy.dialects import postgresql
-from sqlalchemy.orm import relationship
-
-from app_utils.models import BaseModel
+from common.app_utils.models import BaseModel
+from sqlalchemy import (
+    UUID,
+    Boolean,
+    Column,
+    DateTime,
+    String,
+    func,
+)
 
 
 class LearningModel(BaseModel):
-    """ Данные о модели (metamodel) """
+    """Данные о модели (metamodel)"""
 
     __tablename__ = "learning_model"
 

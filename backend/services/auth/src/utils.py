@@ -2,21 +2,21 @@ import hashlib
 import random
 import string
 from datetime import datetime, timedelta
+
 import jwt
-from fastapi.security import HTTPBasicCredentials, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from src.models import User, Role
-from src.schemas import UserCreate, UserBase, UserCheck
+from src.models import Role, User
+from src.schemas import UserBase, UserCreate
 
 
 async def create_user(user: UserCreate, session: AsyncSession):
-    """ Создает пользователя """
+    """Создает пользователя"""
     query = select(User).where(user.username == User.username)
     user_ = (await session.execute(query)).scalars().all()
     if not user_:
-        roles = user.roles.replace(' ', '').split(',')
+        roles = user.roles.replace(" ", "").split(",")
         query = select(Role).filter(Role.role.in_(roles))
         roles = (await session.execute(query)).scalars().all()
         salt = get_random_string()
@@ -28,8 +28,10 @@ async def create_user(user: UserCreate, session: AsyncSession):
         return UserBase(username=new_user.username)
 
 
-async def check_user(credentials: HTTPAuthorizationCredentials, session: AsyncSession) -> tuple:
-    """ Проверяет пользователя Basic auth """
+async def check_user(
+    credentials: HTTPAuthorizationCredentials, session: AsyncSession
+) -> tuple:
+    """Проверяет пользователя Basic auth"""
     access = False
     query = select(User).where(credentials.username == User.username)
     user_ = (await session.execute(query)).scalars().all()
@@ -40,18 +42,20 @@ async def check_user(credentials: HTTPAuthorizationCredentials, session: AsyncSe
 
 
 async def check_token(credentials: HTTPAuthorizationCredentials) -> tuple:
-    """ Проверяет пользователя JwtToken auth"""
+    """Проверяет пользователя JwtToken auth"""
     access = False
     try:
-        payload = jwt.decode(credentials.credentials, "SECRET_STRING1", algorithms=["HS256"])
-        access = int(datetime.utcnow().timestamp()) < int(payload['exp'])
-        return access, payload['username']
+        payload = jwt.decode(
+            credentials.credentials, "SECRET_STRING1", algorithms=["HS256"]
+        )
+        access = int(datetime.utcnow().timestamp()) < int(payload["exp"])
+        return access, payload["username"]
     except:
         return access, None
 
 
 async def check_role(username: str, app_role: str, session: AsyncSession):
-    """ Проверяет роль пользователя """
+    """Проверяет роль пользователя"""
     query = select(User).filter(username == User.username)
     user = (await session.execute(query)).scalars().one()
     if user:
@@ -62,22 +66,28 @@ async def check_role(username: str, app_role: str, session: AsyncSession):
 
 
 def validate_password(password: str, hashed_password: str):
-    """ Проверяет пароль """
+    """Проверяет пароль"""
     salt, hashed = hashed_password.split("$")
     return hash_password(password, salt) == hashed
 
+
 def hash_password(password: str, salt: str = None):
-    """ Хэширует пароль с солью """
+    """Хэширует пароль с солью"""
     if salt is None:
         salt = get_random_string()
     enc = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 100_000)
     return enc.hex()
 
+
 def get_random_string(length=12):
-    """ Рандомная строка соль """
+    """Рандомная строка соль"""
     return "".join(random.choice(string.ascii_letters) for _ in range(length))
 
+
 def create_token(username: str):
-    """ Создает JwtToken """
-    jwt_token = jwt.encode(dict(exp=datetime.utcnow() + timedelta(days=14), username=username), "SECRET_STRING1")
+    """Создает JwtToken"""
+    jwt_token = jwt.encode(
+        dict(exp=datetime.utcnow() + timedelta(days=14), username=username),
+        "SECRET_STRING1",
+    )
     return jwt_token

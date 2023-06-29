@@ -1,13 +1,13 @@
 import uuid
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm.collections import InstrumentedList
 
 Base = declarative_base()
 
-class BaseModel(Base):
 
+class BaseModel(Base):
     __abstract__ = True
 
     def to_dict(self, rel=True, ignored_fields=(), **additional_fields):
@@ -15,7 +15,7 @@ class BaseModel(Base):
         for attribute, value in self.__dict__.items():
             if attribute in ignored_fields:
                 continue
-            if not attribute.startswith('_'):
+            if not attribute.startswith("_"):
                 if isinstance(value, InstrumentedList):
                     if rel:
                         attrs[attribute] = []

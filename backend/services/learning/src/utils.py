@@ -1,16 +1,20 @@
-from sqlalchemy import text, select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.models import LearningModel
 from src.service.trainer import Learn
 
 
-async def learning_model(fields: list[str], model_name: str, username: str, session: AsyncSession):
-    """ Обучает модель """
+async def learning_model(
+    fields: list[str], model_name: str, username: str, session: AsyncSession
+):
+    """Обучает модель"""
     try:
-        learn = Learn(filename='test_name', fields=fields)
+        learn = Learn(filename="test_name", fields=fields)
         data, label = learn.get_data()
         model = learn.train_model(data=data, label=label)
-        model_info = LearningModel(name=model_name, username=username, facts=",".join(fields))
+        model_info = LearningModel(
+            name=model_name, username=username, facts=",".join(fields)
+        )
         session.add(model_info)
         await session.flush()
         learn.save_model(id=str(model_info.id), model=model)
@@ -22,14 +26,15 @@ async def learning_model(fields: list[str], model_name: str, username: str, sess
 
 
 async def get_column_names(session: AsyncSession):
-    """ Обучает модель """
-    query = text('SELECT * FROM public.for_model;')
+    """Обучает модель"""
+    query = text("SELECT * FROM public.for_model;")
     column_names = list((await session.execute(query)).keys())
-    column_names.remove('work_type_id')
+    column_names.remove("work_type_id")
     return list(column_names)
 
+
 async def set_model(id: str, session: AsyncSession):
-    """ Устанавливает модель по умлчанию """
+    """Устанавливает модель по умлчанию"""
     try:
         query = select(LearningModel)
         result = await session.execute(query)
