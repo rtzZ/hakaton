@@ -13,7 +13,9 @@ class Learn:
     def __init__(self, filename: str, fields: list[str]):
         self.filename = filename
         self.fields = ",".join(fields)
-        self.redis = redis.StrictRedis(host=REDIS_HOST, port=int(REDIS_PORT), db=0)
+        self.redis = redis.StrictRedis(
+            host=REDIS_HOST, port=int(REDIS_PORT), db=0
+        )
         self.engine = create_engine(
             f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
         )

@@ -20,7 +20,9 @@ class BaseModel(Base):
                     if rel:
                         attrs[attribute] = []
                         for val in value:
-                            attrs[attribute].append(val.to_dict(rel, ignored_fields))
+                            attrs[attribute].append(
+                                val.to_dict(rel, ignored_fields)
+                            )
                         continue
                     else:
                         continue

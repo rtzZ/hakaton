@@ -1,6 +1,7 @@
 import io
 import pickle
 import uuid
+import traceback
 
 import pandas as pd
 import redis as red
@@ -21,7 +22,9 @@ from src.service.ai import Prediction
 
 async def get_model_id(session: AsyncSession):
     """Получает информацию о модели"""
-    query = select(LearningModel).where(LearningModel.is_selected is True)
+    query = select(LearningModel).where(
+        LearningModel.is_selected == True
+    )  # noqa
     model_info = (await session.execute(query)).scalar()
     return model_info
 
@@ -56,7 +59,9 @@ async def search_buildigs(
         buildings_with_rec = []
         for build in buildings:
             fields = int(prediction.get_prediction([build.unom]))
-            query = select(Recommendation).filter(Recommendation.id.in_([fields]))
+            query = select(Recommendation).filter(
+                Recommendation.id.in_([fields])
+            )
             recommendations = (await session.execute(query)).scalar()
 
             query = select(Incident).where(Incident.unom == build.unom)
@@ -69,8 +74,11 @@ async def search_buildigs(
                     "incidents": incidents,
                 }
             )
-
         # return buildings_with_rec, file_id
+    except Exception as e:
+        print("Error")
+        print(e)
+        print(traceback.format_exc())
     finally:
         """Генерируем excel file"""
         if buildings_with_rec:
@@ -115,7 +123,9 @@ async def search_buildigs(
                 ]
             ]
 
-            redis = red.StrictRedis(host=REDIS_HOST, port=int(REDIS_PORT), db=0)
+            redis = red.StrictRedis(
+                host=REDIS_HOST, port=int(REDIS_PORT), db=0
+            )
             file_id = f"file:{str(uuid.uuid4())}"
             redis.set(file_id, pickle.dumps(df))
         return buildings_with_rec, file_id
@@ -231,7 +241,9 @@ async def get_recommendation(
         prediction = Prediction(id=str(model_info.id), fields=model_info.facts)
 
         prediction_result = prediction.get_prediction2(building_ids)
-        query = select(Recommendation).filter(Recommendation.id.in_(prediction_result))
+        query = select(Recommendation).filter(
+            Recommendation.id.in_(prediction_result)
+        )
         recommendations = (await session.execute(query)).scalars().all()
     finally:
         return recommendations

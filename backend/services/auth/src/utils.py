@@ -21,7 +21,9 @@ async def create_user(user: UserCreate, session: AsyncSession):
         roles = (await session.execute(query)).scalars().all()
         salt = get_random_string()
         hashed_password = hash_password(user.password, salt)
-        new_user = User(username=user.username, password=f"{salt}${hashed_password}")
+        new_user = User(
+            username=user.username, password=f"{salt}${hashed_password}"
+        )
         new_user.roles = roles
         session.add(new_user)
         await session.commit()
@@ -75,7 +77,9 @@ def hash_password(password: str, salt: str = None):
     """Хэширует пароль с солью"""
     if salt is None:
         salt = get_random_string()
-    enc = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 100_000)
+    enc = hashlib.pbkdf2_hmac(
+        "sha256", password.encode(), salt.encode(), 100_000
+    )
     return enc.hex()
 
 

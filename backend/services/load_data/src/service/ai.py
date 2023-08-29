@@ -13,7 +13,9 @@ class Prediction:
     def __init__(self, id: str, fields: str):
         self.id = id
         self.fields = fields
-        self.redis = redis.StrictRedis(host=REDIS_HOST, port=int(REDIS_PORT), db=0)
+        self.redis = redis.StrictRedis(
+            host=REDIS_HOST, port=int(REDIS_PORT), db=0
+        )
         self.engine = create_engine(
             f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
             isolation_level="AUTOCOMMIT",
@@ -22,12 +24,18 @@ class Prediction:
     def get_prediction(self, build_ids: list) -> list:
         """Получить рекомендацию"""
         model = pickle.loads(pickle.loads(self.redis.get(self.id)))
-        sql_text = f"select work_type_id,{self.fields} from for_model where unom in ("
+        sql_text = (
+            f"select work_type_id,{self.fields} from for_model where unom in ("
+        )
         sql_text2 = sql_text + ", ".join(map(str, build_ids)) + ");"
-        data123 = pd.read_sql_query(sql=text(sql_text2), con=self.engine.connect())
+        data123 = pd.read_sql_query(
+            sql=text(sql_text2), con=self.engine.connect()
+        )
         sql_text3 = "SELECT work_type_id FROM public.work where unom in ("
         sql_text4 = sql_text3 + ", ".join(map(str, build_ids)) + ");"
-        d_index = pd.read_sql_query(sql=text(sql_text4), con=self.engine.connect())
+        d_index = pd.read_sql_query(
+            sql=text(sql_text4), con=self.engine.connect()
+        )
         result_ids = model.predict_proba(data123[data123.columns[1:]])
         if len(d_index) == 0:
             b = list(result_ids[0])
@@ -44,12 +52,18 @@ class Prediction:
     def get_prediction2(self, build_ids: list) -> list:
         """Получить ТОП (3) рекомендации"""
         model = pickle.loads(pickle.loads(self.redis.get(self.id)))
-        sql_text = f"select work_type_id,{self.fields} from for_model where unom in ("
+        sql_text = (
+            f"select work_type_id,{self.fields} from for_model where unom in ("
+        )
         sql_text2 = sql_text + ", ".join(map(str, build_ids)) + ");"
-        data123 = pd.read_sql_query(sql=text(sql_text2), con=self.engine.connect())
+        data123 = pd.read_sql_query(
+            sql=text(sql_text2), con=self.engine.connect()
+        )
         sql_text3 = "SELECT work_type_id FROM public.work where unom in ("
         sql_text4 = sql_text3 + ", ".join(map(str, build_ids)) + ");"
-        d_index = pd.read_sql_query(sql=text(sql_text4), con=self.engine.connect())
+        d_index = pd.read_sql_query(
+            sql=text(sql_text4), con=self.engine.connect()
+        )
         result_ids = model.predict_proba(data123[data123.columns[1:]])
         l = []
         j = 0

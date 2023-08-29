@@ -8,7 +8,9 @@ from sqlalchemy import create_engine, text
 from src.service.table_config import params
 
 STG_PREFIX = "stg_"
-e = create_engine(f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}")
+e = create_engine(
+    f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+)
 
 
 def load_data_1(files_io: dict):
@@ -37,7 +39,9 @@ def load_data_1(files_io: dict):
         skiprows=range(1, 2),
         dtype=str,
     )
-    main_df.rename(columns={col: col.lower() for col in main_df.columns}, inplace=True)
+    main_df.rename(
+        columns={col: col.lower() for col in main_df.columns}, inplace=True
+    )
     main_df.rename(
         columns={col.lower(): f"{col.lower()}_id" for col in sheets},
         inplace=True,
@@ -47,7 +51,9 @@ def load_data_1(files_io: dict):
         io=files_io[filename], sheet_name=sheets, skiprows=1, dtype=str
     )
     for sheet, df in other_df.items():
-        df.rename(columns={col: col.lower() for col in df.columns}, inplace=True)
+        df.rename(
+            columns={col: col.lower() for col in df.columns}, inplace=True
+        )
         table_name = f"{STG_PREFIX}{sheet.lower()}"
         _insert_data(df, table_name)
 
@@ -63,7 +69,9 @@ def _rename_cols(df):
 def _date_correct(df, pattern, columns):
     """Корректировка типов"""
     for col in columns:
-        df[col] = df[col].apply(lambda x: datetime.strptime(x, pattern) if x else x)
+        df[col] = df[col].apply(
+            lambda x: datetime.strptime(x, pattern) if x else x
+        )
     return df
 
 
@@ -94,7 +102,9 @@ def load_data(
             skiprows=skip_rows,
         )
     else:
-        df = pd.read_excel(io=files_io[filename], sheet_name=sheet_name, dtype=str)
+        df = pd.read_excel(
+            io=files_io[filename], sheet_name=sheet_name, dtype=str
+        )
 
     if columns:
         df.rename(columns=columns, inplace=True)

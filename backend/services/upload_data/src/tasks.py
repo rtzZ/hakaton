@@ -15,6 +15,8 @@ async def upload_files(bites: io.BytesIO):
     with ZipFile(bites, "r") as zip_file:
         for xlxs_file in zip_file.filelist:
             if "__MACOSX" not in xlxs_file.filename:
-                files[xlxs_file.filename] = zip_file.open(xlxs_file.filename).read()
+                files[xlxs_file.filename] = zip_file.open(
+                    xlxs_file.filename
+                ).read()
 
     start(files)

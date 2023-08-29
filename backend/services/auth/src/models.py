@@ -51,4 +51,6 @@ class Role(BaseModel):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role = Column(String, nullable=True)
-    users = relationship("User", secondary="user_roles", back_populates="roles")
+    users = relationship(
+        "User", secondary="user_roles", back_populates="roles"
+    )

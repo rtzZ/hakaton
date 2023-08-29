@@ -2,7 +2,11 @@ import os
 
 import requests
 from fastapi import Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBasic, HTTPBearer
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBasic,
+    HTTPBearer,
+)
 from requests.auth import HTTPBasicAuth
 
 
@@ -65,7 +69,9 @@ class Authorization:
 
     def __call__(
         self,
-        basic_auth: HTTPAuthorizationCredentials = Depends(HTTPBasic(auto_error=False)),
+        basic_auth: HTTPAuthorizationCredentials = Depends(
+            HTTPBasic(auto_error=False)
+        ),
         bearer_auth: HTTPAuthorizationCredentials = Depends(
             HTTPBearer(auto_error=False)
         ),
@@ -92,7 +98,9 @@ class Authorization:
         """Авторизация через сервис basic"""
         auth = HTTPBasicAuth(auth.username, auth.password)
         role = dict(app_role=self.role)
-        resp = requests.post(url=self.url, auth=auth, params=role if role else {})
+        resp = requests.post(
+            url=self.url, auth=auth, params=role if role else {}
+        )
         if resp.status_code == 401:
             raise HTTPException(status_code=401, detail="Not authenticated")
         return True, auth.username
@@ -101,7 +109,9 @@ class Authorization:
         """Авторизация через сервис bearer"""
         headers = dict(Authorization=f"Bearer {auth.credentials}")
         role = dict(app_role=self.role)
-        resp = requests.post(url=self.url, headers=headers, params=role if role else {})
+        resp = requests.post(
+            url=self.url, headers=headers, params=role if role else {}
+        )
         if resp.status_code == 401:
             raise HTTPException(status_code=401, detail="Not authenticated")
         return True, resp.json().get("username")
