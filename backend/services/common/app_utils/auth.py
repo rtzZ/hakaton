@@ -1,5 +1,3 @@
-import os
-
 import requests
 from fastapi import Depends, HTTPException
 from fastapi.security import (
@@ -8,6 +6,7 @@ from fastapi.security import (
     HTTPBearer,
 )
 from requests.auth import HTTPBasicAuth
+from common.config import AUTH_APP_HOST, AUTH_APP_PORT
 
 
 class ServiceSender:
@@ -65,7 +64,7 @@ class Authorization:
 
     def __init__(self, role: str):
         self.role = role
-        self.url = f"http://{os.environ.get('AUTH_APP_HOST')}:{str(os.environ.get('AUTH_APP_PORT'))}/sign-in"
+        self.url = f"http://{AUTH_APP_HOST}:{AUTH_APP_PORT}/sign-in"
 
     def __call__(
         self,
