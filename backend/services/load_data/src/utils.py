@@ -18,8 +18,10 @@ from src.models import (
     Recommendation,
 )
 from src.service.ai import Prediction
+from common.utils.logg import log
 
 
+@log
 async def get_model_id(session: AsyncSession):
     """Получает информацию о модели"""
     query = select(LearningModel).where(
@@ -29,6 +31,7 @@ async def get_model_id(session: AsyncSession):
     return model_info
 
 
+@log
 async def search_buildigs(
     building_filter: BuildingFilter, session: AsyncSession, id: str = None
 ):
@@ -57,6 +60,7 @@ async def search_buildigs(
         prediction = Prediction(id=str(model_info.id), fields=model_info.facts)
 
         buildings_with_rec = []
+        print('Building count:', len(buildings))
         for build in buildings:
             fields = int(prediction.get_prediction([build.unom]))
             query = select(Recommendation).filter(
@@ -131,6 +135,7 @@ async def search_buildigs(
         return buildings_with_rec, file_id
 
 
+@log
 async def get_excel_file(file_id: str):
     redis = red.StrictRedis(host=REDIS_HOST, port=int(REDIS_PORT), db=0)
     df = pickle.loads(redis.get(file_id))
@@ -153,6 +158,7 @@ async def get_excel_file(file_id: str):
     return excel_bytes
 
 
+@log
 async def get_addresses(session: AsyncSession):
     addresses = []
     try:
@@ -163,6 +169,7 @@ async def get_addresses(session: AsyncSession):
         return addresses
 
 
+@log
 async def set_coordinates(
     api_keys: list[str], country: str, city: str, session: AsyncSession
 ):
@@ -177,8 +184,9 @@ async def set_coordinates(
         full_addresses = result.scalars().all()
 
         i = 0
+        print(len(full_addresses))
         for full in full_addresses:
-            if full.soor == "hh":
+            if full.soor == "0, 0":
                 pos = None
                 try:
                     pos = get_coordinates(
@@ -187,7 +195,11 @@ async def set_coordinates(
                         address=full.address,
                         api_key=api_key[i],
                     )
-                except:
+                except Exception as e:
+                    print("Error")
+                    print(e)
+                    print(traceback.format_exc())
+
                     try:
                         if i == len(api_key):
                             break
@@ -198,17 +210,26 @@ async def set_coordinates(
                             address=full.address,
                             api_key=api_key[i],
                         )
-                    except:
+                    except Exception as e:
+                        print("Error")
+                        print(e)
+                        print(traceback.format_exc())
+
                         await session.commit()
                         break
                 if pos:
                     full.soor = f"{pos[1]},{pos[0]}"
                     print(f"Adress: {full.address} pos: {full.soor}")
         await session.commit()
+    except Exception as e:
+        print("Error")
+        print(e)
+        print(traceback.format_exc())
     finally:
         return full_addresses
 
 
+@log
 def get_coordinates(country: str, city: str, address: str, api_key: str):
     pos = None
     try:
@@ -227,10 +248,15 @@ def get_coordinates(country: str, city: str, address: str, api_key: str):
             .get("pos")
             .split(" ")
         )
+    except Exception as e:
+        print("Error")
+        print(e)
+        print(traceback.format_exc())
     finally:
         return pos
 
 
+@log
 async def get_recommendation(
     building_ids: list[int], session: AsyncSession, id: str = None
 ):
@@ -245,10 +271,15 @@ async def get_recommendation(
             Recommendation.id.in_(prediction_result)
         )
         recommendations = (await session.execute(query)).scalars().all()
+    except Exception as e:
+        print("Error")
+        print(e)
+        print(traceback.format_exc())
     finally:
         return recommendations
 
 
+@log
 async def get_model(session: AsyncSession):
     """Возвращает модели"""
     query = select(LearningModel)
@@ -257,6 +288,7 @@ async def get_model(session: AsyncSession):
     return models
 
 
+@log
 async def set_model(id: str, session: AsyncSession):
     """Устанавливает модель по умолчанию"""
     query = select(LearningModel)

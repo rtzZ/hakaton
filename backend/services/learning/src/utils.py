@@ -2,8 +2,11 @@ from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.models import LearningModel
 from src.service.trainer import Learn
+from common.utils.logg import log
+import traceback
 
 
+@log
 async def learning_model(
     fields: list[str], model_name: str, username: str, session: AsyncSession
 ):
@@ -21,10 +24,14 @@ async def learning_model(
         await session.commit()
         await set_model(id=str(model_info.id), session=session)
         return True
-    except:
+    except Exception as e:
+        print("ERROR")
+        print(e)
+        print(traceback.format_exc())
         return False
 
 
+@log
 async def get_column_names(session: AsyncSession):
     """Обучает модель"""
     query = text("SELECT * FROM public.for_model;")
@@ -33,6 +40,7 @@ async def get_column_names(session: AsyncSession):
     return list(column_names)
 
 
+@log
 async def set_model(id: str, session: AsyncSession):
     """Устанавливает модель по умлчанию"""
     try:
@@ -46,5 +54,8 @@ async def set_model(id: str, session: AsyncSession):
                 model.is_selected = False
         await session.commit()
         return True
-    except:
+    except Exception as e:
+        print("Error")
+        print(e)
+        print(traceback.format_exc())
         return False

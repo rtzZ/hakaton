@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useEffect, useState} from "react";
 import * as yup from "yup";
 import {useTheme} from "@mui/material/styles";

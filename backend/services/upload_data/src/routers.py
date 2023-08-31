@@ -1,4 +1,5 @@
 import io
+import traceback
 
 from common.app_utils.auth import Authorization
 from common.config import REDIS_HOST, REDIS_PORT
@@ -44,5 +45,9 @@ async def upload_log():
             if job.is_started:
                 meta = job.get_meta(refresh=True)
                 return meta
+    except Exception as e:
+        print("Error")
+        print(e)
+        print(traceback.format_exc())
     finally:
         return meta

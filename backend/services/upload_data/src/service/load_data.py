@@ -6,6 +6,8 @@ from common.database import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from rq import get_current_job
 from sqlalchemy import create_engine, text
 from src.service.table_config import params
+from common.utils.logg import log
+
 
 STG_PREFIX = "stg_"
 e = create_engine(
@@ -61,11 +63,13 @@ def load_data_1(files_io: dict):
     _insert_data(main_df, table_name)
 
 
+@log
 def _rename_cols(df):
     """Переименование колонок"""
     return df.rename(columns={col: col.lower() for col in df.columns})
 
 
+@log
 def _date_correct(df, pattern, columns):
     """Корректировка типов"""
     for col in columns:
@@ -75,6 +79,7 @@ def _date_correct(df, pattern, columns):
     return df
 
 
+@log
 def _df_to_sql(df, key_id, table_name, type_id):
     """Преобразование данных"""
     sql = f"select {key_id} from {table_name}"
@@ -118,6 +123,7 @@ def load_data(
     _insert_data(df, table_name, key_id, type_id)
 
 
+@log
 def _insert_data(df, table_name, key_id="id", type_id=str):
     """Вставка данных"""
     print(f"load data to {table_name} -> ", end="")
@@ -126,6 +132,7 @@ def _insert_data(df, table_name, key_id="id", type_id=str):
     print(f"Success (Update: {len(df)} records)")
 
 
+@log
 def execute_sql(sql_file):
     """Выполняеет sql инструкции"""
     with open(sql_file, "r", encoding="UTF-8") as f:
@@ -145,6 +152,7 @@ def load(files_io: dict):
         load_data(**kwargs)
 
 
+@log
 def _load_model_etl():
     """Загрузка модули данных"""
     print("Start update model")
@@ -168,6 +176,7 @@ def start(files_io: dict):
         "init": f"{os.getcwd()}/src/service/sql/init.sql",
         "init_model": f"{os.getcwd()}/src/service/sql/init_model.sql",
         "etl": f"{os.getcwd()}/src/service/sql/etl.sql",
+        "init_coords": f"{os.getcwd()}/src/service/sql/init_addr_coords.sql",
         "model_etl": f"{os.getcwd()}/src/service/sql/model_etl.sql",
     }
 
@@ -191,6 +200,9 @@ def start(files_io: dict):
     job.meta["stage"] = "etl"
     job.save_meta()
     execute_sql(sql_files.get("etl"))
+
+    # Инициализация координат
+    execute_sql(sql_files.get("init_coords"))
 
     # Построение датасета
     job.meta["stage"] = "model_etl"

@@ -7,8 +7,8 @@ services:
     restart: always
     command: >
       sh -c "npm start"
-    #    volumes:
-    #      - ./frontend:/app
+    #volumes:
+    #  - ./frontend:/app
     ports:
       - "3000:3000"
 

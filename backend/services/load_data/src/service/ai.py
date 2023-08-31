@@ -5,11 +5,13 @@ import redis
 from common.config import REDIS_HOST, REDIS_PORT
 from common.database import DB_HOST, DB_NAME, DB_PASS, DB_PORT, DB_USER
 from sqlalchemy import create_engine, text
+from common.utils.logg import log
 
 
 class Prediction:
     """Обучение"""
 
+    @log
     def __init__(self, id: str, fields: str):
         self.id = id
         self.fields = fields
@@ -19,8 +21,11 @@ class Prediction:
         self.engine = create_engine(
             f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}",
             isolation_level="AUTOCOMMIT",
+            pool_size=120,
+            pool_timeout=120,
         )
 
+    @log
     def get_prediction(self, build_ids: list) -> list:
         """Получить рекомендацию"""
         model = pickle.loads(pickle.loads(self.redis.get(self.id)))
@@ -49,6 +54,7 @@ class Prediction:
                 b = list(result_ids[0])
                 return model.classes_[b.index(max(b))]
 
+    @log
     def get_prediction2(self, build_ids: list) -> list:
         """Получить ТОП (3) рекомендации"""
         model = pickle.loads(pickle.loads(self.redis.get(self.id)))

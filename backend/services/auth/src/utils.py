@@ -2,6 +2,7 @@ import hashlib
 import random
 import string
 from datetime import datetime, timedelta
+import traceback
 
 import jwt
 from fastapi.security import HTTPAuthorizationCredentials
@@ -52,7 +53,10 @@ async def check_token(credentials: HTTPAuthorizationCredentials) -> tuple:
         )
         access = int(datetime.utcnow().timestamp()) < int(payload["exp"])
         return access, payload["username"]
-    except:
+    except Exception as e:
+        print("Error")
+        print(e)
+        print(traceback.format_exc())
         return access, None
 
 

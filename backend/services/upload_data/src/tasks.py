@@ -3,8 +3,10 @@ from zipfile import ZipFile
 
 from rq import get_current_job
 from src.service.load_data import start
+from common.utils.logg import log
 
 
+@log
 async def upload_files(bites: io.BytesIO):
     """Переодическая задача, разбор архива и вызов парсинга"""
     job = get_current_job()
