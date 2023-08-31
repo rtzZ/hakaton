@@ -60,7 +60,7 @@ async def search_buildigs(
         prediction = Prediction(id=str(model_info.id), fields=model_info.facts)
 
         buildings_with_rec = []
-        print('Building count:', len(buildings))
+        print("Building count:", len(buildings))
         for build in buildings:
             fields = int(prediction.get_prediction([build.unom]))
             query = select(Recommendation).filter(
@@ -179,16 +179,32 @@ async def set_coordinates(
         query = select(Building.address)  # AddressPos
         result = await session.execute(query)
         addresses = result.scalars().all()
-        query = select(AddressPos).filter(AddressPos.address.in_(addresses))
+        query = select(AddressPos).filter(
+            AddressPos.address.in_(addresses)
+        ).filter(AddressPos.soor.in_(["0, 0"]))
         result = await session.execute(query)
         full_addresses = result.scalars().all()
 
         i = 0
         print(len(full_addresses))
         for full in full_addresses:
-            if full.soor == "0, 0":
-                pos = None
+            pos = None
+            try:
+                pos = get_coordinates(
+                    country=country,
+                    city=city,
+                    address=full.address,
+                    api_key=api_key[i],
+                )
+            except Exception as e:
+                print("Error")
+                print(e)
+                print(traceback.format_exc())
+
                 try:
+                    if i == len(api_key):
+                        break
+                    i += 1
                     pos = get_coordinates(
                         country=country,
                         city=city,
@@ -200,27 +216,12 @@ async def set_coordinates(
                     print(e)
                     print(traceback.format_exc())
 
-                    try:
-                        if i == len(api_key):
-                            break
-                        i += 1
-                        pos = get_coordinates(
-                            country=country,
-                            city=city,
-                            address=full.address,
-                            api_key=api_key[i],
-                        )
-                    except Exception as e:
-                        print("Error")
-                        print(e)
-                        print(traceback.format_exc())
-
-                        await session.commit()
-                        break
-                if pos:
-                    full.soor = f"{pos[1]},{pos[0]}"
-                    print(f"Adress: {full.address} pos: {full.soor}")
-        await session.commit()
+                    await session.commit()
+                    break
+            if pos:
+                full.soor = f"{pos[1]},{pos[0]}"
+                print(f"Adress: {full.address} pos: {full.soor}")
+            await session.commit()
     except Exception as e:
         print("Error")
         print(e)

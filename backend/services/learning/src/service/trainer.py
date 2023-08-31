@@ -38,7 +38,6 @@ class Learn:
         data_f = data[data["work_type_id"] > 0]
         return data_f[data_f.columns[1:]], data_f["work_type_id"]
 
-    @log
     def train_model(self, data, label) -> pickle:
         train_data = Pool(data=data, label=label)
         model = CatBoostClassifier(**self.params_cb)

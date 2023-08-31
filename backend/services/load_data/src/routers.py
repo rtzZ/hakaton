@@ -34,6 +34,7 @@ async def search_building(
     buildings, file_id = await search_buildigs(
         building_filter=building_filter, id=id, session=session
     )
+    print([build.get("build").soor for build in buildings])
     return {"buildings": buildings, "file_id": file_id}
 
 

@@ -50,4 +50,5 @@ def log(func):
         result = func(*args, **kwargs)
         print(f"LOG:\t{datetime.now()} - {func.__name__}() result - {result}")
         return result
+
     return wrapper
